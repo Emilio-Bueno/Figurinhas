@@ -149,7 +149,7 @@ function renderizarGrupos() {
 
             let htmlContador = modoRepetidasAtivo 
                 ? `<div class="country-progress-repetidas ${repetidas > 0 ? 'tem-repetidas' : ''}">${repetidas}</div>`
-                : `<div class="country-progress ${obtidas === 20 ? 'completado' : ''}">${obtidas}/20</div>`;
+                : `<div class="country-progress ${obtidas === figurinhasPorSelecao ? 'completado' : ''}">${obtidas}/${figurinhasPorSelecao}</div>`;
 
             const countryPill = document.createElement('div');
             countryPill.className = 'country-pill';
@@ -186,10 +186,18 @@ function renderizarGradeFigurinhas(country) {
     const stickerGrid = document.getElementById('sticker-grid');
     stickerGrid.innerHTML = '';
     
-    for (let i = 1; i <= figurinhasPorSelecao; i++) {
+    // REGRA NOVA: Se for FWC, começa no 0 e vai até 19. Senão, 1 a 20.
+    const isFWC = country.id === "FWC";
+    const numeroInicial = isFWC ? 0 : 1;
+    const numeroFinal = isFWC ? 19 : figurinhasPorSelecao;
+
+    for (let i = numeroInicial; i <= numeroFinal; i++) {
+        // Formata o número 0 para aparecer como "00" na tela
+        const displayNum = (i === 0) ? "00" : i;
+
         const sticker = document.createElement('div');
         sticker.className = 'sticker';
-        sticker.innerHTML = `<span class="sticker-code">${country.id}</span><span class="sticker-num">${i}</span><button class="btn-diminuir" onclick="modificarRepetida('${country.id}', ${i}, -1, event)">-</button>`;
+        sticker.innerHTML = `<span class="sticker-code">${country.id}</span><span class="sticker-num">${displayNum}</span><button class="btn-diminuir" onclick="modificarRepetida('${country.id}', ${i}, -1, event)">-</button>`;
         
         if (progressoAlbum[country.id] && progressoAlbum[country.id][i]) {
             const status = progressoAlbum[country.id][i];
@@ -245,7 +253,7 @@ function voltar() {
     renderizarGrupos();
 }
 
-// --- FUNÇÃO DE RELATÓRIO PARA WHATSAPP ---
+// --- FUNÇÃO DE RELATÓRIO PARA WHATSAPP (ATUALIZADA PARA FWC) ---
 function gerarRelatorio() {
     let relatorio = "*📋 MEU RELATÓRIO DE FIGURINHAS (2026)*\n\n";
     let faltamStr = "";
@@ -256,7 +264,12 @@ function gerarRelatorio() {
             let faltamPais = [];
             let repetidasPais = [];
 
-            for (let i = 1; i <= figurinhasPorSelecao; i++) {
+            const isFWC = country.id === "FWC";
+            const numeroInicial = isFWC ? 0 : 1;
+            const numeroFinal = isFWC ? 19 : figurinhasPorSelecao;
+
+            for (let i = numeroInicial; i <= numeroFinal; i++) {
+                const displayNum = (i === 0) ? "00" : i;
                 let tem = false;
                 let reps = 0;
                 
@@ -265,8 +278,8 @@ function gerarRelatorio() {
                     reps = progressoAlbum[country.id][i].repeatedCount || 0;
                 }
                 
-                if (!tem) faltamPais.push(i);
-                if (reps > 0) repetidasPais.push(`${i}(+${reps})`);
+                if (!tem) faltamPais.push(displayNum);
+                if (reps > 0) repetidasPais.push(`${displayNum}(+${reps})`);
             }
 
             if (faltamPais.length > 0 && faltamPais.length < figurinhasPorSelecao) {
