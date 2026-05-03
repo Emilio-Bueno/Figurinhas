@@ -1,0 +1,136 @@
+:root {
+    --bg-color: #121212;
+    --card-bg-color: #1e1e1e;
+    --text-color: #d1d1d1;
+    --header-color: #ffffff;
+    --accent-purple: #b388ff;
+    --accent-special: #ffea00;
+    --accent-repeated: #2196f3;
+    --border-color: #333333;
+    
+    --sticker-missing: #2a2a2a;
+    --sticker-owned: #4caf50; 
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0; 
+    padding: 0;
+    user-select: none;
+}
+
+header { padding: 20px; text-align: center; }
+h1 { color: var(--accent-purple); font-size: 20px; margin: 0; font-weight: bold; }
+h2 { color: var(--text-color); font-size: 14px; font-weight: normal; margin: 5px 0 10px 0; }
+
+#dashboard-container { display: flex; justify-content: center; padding: 10px; }
+.dashboard-card {
+    background-color: var(--card-bg-color);
+    border-radius: 12px; padding: 15px;
+    width: 100%; max-width: 400px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.dashboard-stats { display: flex; justify-content: space-around; }
+.stat-value { font-size: 24px; font-weight: bold; color: var(--header-color); }
+.stat-label { font-size: 12px; color: var(--text-color); }
+
+.modo-selector {
+    display: flex; justify-content: center; gap: 8px;
+    padding: 10px 20px; max-width: 400px; margin: 0 auto;
+}
+
+.btn-modo {
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 12px 8px; border-radius: 8px;
+    font-size: 14px; font-weight: bold;
+    cursor: pointer; flex: 1; transition: 0.2s;
+}
+
+.btn-modo.active {
+    background-color: var(--accent-purple);
+    color: white; border-color: var(--accent-purple);
+}
+
+.btn-relatorio {
+    background-color: #388e3c;
+    color: white;
+    border-color: #2e7d32;
+}
+
+.btn-relatorio:hover {
+    background-color: #2e7d32;
+}
+
+#groups-view { padding: 10px 20px 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+.group-card { background-color: var(--card-bg-color); border-radius: 12px; width: 100%; max-width: 400px; padding: 15px; }
+.group-title { color: var(--accent-purple); font-size: 16px; font-weight: bold; margin-bottom: 12px; text-transform: uppercase; }
+
+.country-pill {
+    background-color: var(--bg-color); border: 1px solid var(--border-color);
+    border-radius: 8px; padding: 12px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer; margin-bottom: 10px; transition: border-color 0.2s;
+}
+.country-pill:hover { border-color: var(--accent-purple); }
+
+.country-flag { width: 28px; height: auto; border-radius: 3px; display: block; }
+.country-name { color: var(--header-color); font-size: 16px; font-weight: bold; flex-grow: 1; }
+
+.country-progress { color: var(--text-color); font-size: 14px; font-weight: bold; background-color: var(--card-bg-color); padding: 4px 8px; border-radius: 6px; }
+.country-progress.completado { color: var(--sticker-owned); border: 1px solid var(--sticker-owned); }
+
+.country-progress-repetidas { color: var(--text-color); font-size: 14px; font-weight: bold; background-color: var(--card-bg-color); padding: 4px 10px; border-radius: 12px; }
+.country-progress-repetidas.tem-repetidas { background-color: var(--accent-repeated); color: white; }
+
+#sticker-view { display: none; padding: 20px; flex-direction: column; align-items: center; }
+.view-header { width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.view-title { color: var(--header-color); font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+
+.back-button, .next-button { 
+    background-color: var(--card-bg-color); color: var(--accent-purple); 
+    font-size: 20px; cursor: pointer; 
+    width: 40px; height: 40px; border-radius: 20px; 
+    display: flex; align-items: center; justify-content: center; 
+}
+
+#sticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 400px; width: 100%; }
+
+.sticker {
+    aspect-ratio: 3/4; border-radius: 6px;
+    background-color: var(--sticker-missing); color: #757575;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; position: relative; border: 1px solid var(--border-color);
+    transition: all 0.2s;
+}
+
+.sticker-code { font-size: 11px; font-weight: bold; margin-bottom: 2px; pointer-events: none;}
+.sticker-num { font-size: 18px; font-weight: bold; pointer-events: none;}
+
+.sticker.owned { background-color: var(--sticker-owned); color: white; border-color: #388e3c; }
+
+/* Bolinha de +1, +2 */
+.sticker.has-repeated::after {
+    content: "+" attr(data-count);
+    position: absolute; top: -6px; right: -6px;
+    background-color: var(--accent-repeated); color: white;
+    font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3); pointer-events: none; z-index: 5;
+}
+
+.modo-repetidas .sticker.has-repeated { background-color: #1a3a5a; border-color: var(--accent-repeated); color: var(--header-color); }
+
+/* Botão Vermelho de Remover Repetidas */
+.btn-diminuir { 
+    display: none; position: absolute; bottom: -8px; left: -8px; 
+    background-color: #d32f2f; color: white; border: none; border-radius: 50%; 
+    width: 26px; height: 26px; font-size: 18px; font-weight: bold; 
+    cursor: pointer; align-items: center; justify-content: center; 
+    z-index: 20; box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+.modo-repetidas .btn-diminuir.visivel { display: flex; }
