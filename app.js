@@ -64,6 +64,51 @@ const stickerView = document.getElementById('sticker-view');
 const groupsView = document.getElementById('groups-view');
 const bodyEl = document.getElementById('app-body');
 
+// --- SISTEMA DE BUSCA ---
+const searchContainer = document.getElementById('search-container');
+const searchInput = document.getElementById('search-input');
+const searchSuggestions = document.getElementById('search-suggestions');
+
+function removerAcentos(str) { 
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); 
+}
+
+searchInput.addEventListener('input', (e) => {
+    const termo = removerAcentos(e.target.value.trim());
+    if (termo.length === 0) { 
+        searchSuggestions.style.display = 'none'; 
+        return; 
+    }
+    const filtrados = listaTodasSelecoes.filter(c => 
+        removerAcentos(c.name).includes(termo) || removerAcentos(c.id).includes(termo)
+    );
+    searchSuggestions.innerHTML = '';
+    if (filtrados.length > 0) {
+        filtrados.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+            div.innerHTML = `<img class="suggestion-flag" src="https://flagcdn.com/w40/${c.flagCode}.png"><span class="suggestion-name">${c.name}</span>`;
+            div.onclick = () => { 
+                searchInput.value = ''; 
+                searchSuggestions.style.display = 'none'; 
+                abrirGradeSelecao(c); 
+            };
+            searchSuggestions.appendChild(div);
+        });
+        searchSuggestions.style.display = 'block';
+    } else { 
+        searchSuggestions.style.display = 'none'; 
+    }
+});
+
+// Esconder sugestões se clicar fora
+document.addEventListener('click', (e) => {
+    if (!searchContainer.contains(e.target)) {
+        searchSuggestions.style.display = 'none';
+    }
+});
+// ------------------------
+
 function mudarModo(modo) {
     modoRepetidasAtivo = (modo === 'repetidas');
     document.getElementById('btn-modo-album').classList.toggle('active', !modoRepetidasAtivo);
@@ -88,6 +133,8 @@ function renderizarResumo() {
 
 function renderizarGrupos() {
     groupsView.innerHTML = '';
+    groupsView.style.display = 'flex'; // CORREÇÃO: Garante que a tela de grupos fique visível
+    
     Object.keys(dadosAlbumEstadicos).forEach(group => {
         const groupCard = document.createElement('div');
         groupCard.className = 'group-card';
@@ -116,6 +163,7 @@ function abrirGradeSelecao(country) {
     groupsView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'none';
     document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'none'); 
+    searchContainer.style.display = 'none'; 
     stickerView.style.display = 'flex';
     document.getElementById('sticker-view-title').innerHTML = `<img class="country-flag" src="https://flagcdn.com/w40/${country.flagCode}.png"><span>${country.name}</span>`;
     const idx = listaTodasSelecoes.findIndex(c => c.id === country.id);
@@ -182,16 +230,14 @@ function voltar() {
     stickerView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'flex';
     document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'flex'); 
-    renderizarGrupos();
+    searchContainer.style.display = 'flex'; 
+    searchInput.value = ''; // CORREÇÃO: Limpa a barra de pesquisa
+    renderizarGrupos(); // Ao chamar essa função, o display flex que adicionei entra em ação
 }
-
-// --- FUNÇÕES DE BACKUP POR ARQUIVO TXT ---
 
 function exportarArquivoBackup() {
     const dados = localStorage.getItem('stickerCollectorMaxProgress');
     if (!dados || dados === '{}') { alert("Seu álbum está vazio."); return; }
-    
-    // Transformamos o backup em arquivo de texto plano (.txt)
     const blob = new Blob([dados], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -208,7 +254,7 @@ function importarArquivoBackup(event) {
     leitor.onload = (e) => {
         try {
             const conteudo = e.target.result;
-            JSON.parse(conteudo); // Testa se o JSON dentro do .txt é válido
+            JSON.parse(conteudo); 
             localStorage.setItem('stickerCollectorMaxProgress', conteudo);
             progressoAlbum = JSON.parse(conteudo);
             renderizarResumo();
