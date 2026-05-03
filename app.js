@@ -185,18 +185,18 @@ function voltar() {
     renderizarGrupos();
 }
 
-// --- FUNÇÕES DE BACKUP POR ARQUIVO JSON ---
+// --- FUNÇÕES DE BACKUP POR ARQUIVO TXT ---
 
 function exportarArquivoBackup() {
     const dados = localStorage.getItem('stickerCollectorMaxProgress');
-    if (!dados || dados === '{}') { alert("Seu álbum está vazio. Não há o que copiar."); return; }
+    if (!dados || dados === '{}') { alert("Seu álbum está vazio."); return; }
     
-    // Cria um arquivo virtual e faz o download
-    const blob = new Blob([dados], { type: 'application/json' });
+    // Transformamos o backup em arquivo de texto plano (.txt)
+    const blob = new Blob([dados], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'backup_album_2026.json';
+    link.download = 'backup_album_2026.txt';
     link.click();
     URL.revokeObjectURL(url);
 }
@@ -204,27 +204,22 @@ function exportarArquivoBackup() {
 function importarArquivoBackup(event) {
     const arquivo = event.target.files[0];
     if (!arquivo) return;
-
     const leitor = new FileReader();
     leitor.onload = (e) => {
         try {
             const conteudo = e.target.result;
-            JSON.parse(conteudo); // Testa se o JSON é válido
+            JSON.parse(conteudo); // Testa se o JSON dentro do .txt é válido
             localStorage.setItem('stickerCollectorMaxProgress', conteudo);
             progressoAlbum = JSON.parse(conteudo);
             renderizarResumo();
             renderizarGrupos();
             alert("✅ Backup carregado com sucesso!");
-        } catch (erro) { 
-            alert("❌ Arquivo inválido. Certifique-se de carregar um arquivo JSON de backup válido."); 
-        }
-        // Reseta o input para permitir carregar o mesmo arquivo duas vezes se necessário
+        } catch (erro) { alert("❌ Arquivo inválido. Certifique-se de carregar um arquivo de backup válido."); }
         event.target.value = '';
     };
     leitor.readAsText(arquivo);
 }
 
-// --- FUNÇÃO DO RELATÓRIO PARA WHATSAPP ---
 function gerarRelatorio() {
     let rel = "*📋 RELATÓRIO 2026*\n\n", faltam = "", reps = "";
     Object.keys(dadosAlbumEstadicos).forEach(g => dadosAlbumEstadicos[g].forEach(c => {
@@ -238,9 +233,8 @@ function gerarRelatorio() {
         if (rP.length > 0) reps += `*${c.id}:* ${rP.join(', ')}\n`;
     }));
     rel += "*🔴 FALTAM:*\n" + (faltam || "Nenhuma!\n") + "\n*🔵 REPETIDAS:*\n" + (reps || "Nenhuma!\n");
-    navigator.clipboard.writeText(rel).then(() => alert("✅ Relatório copiado com sucesso!\n\nCole no seu WhatsApp ou Bloco de Notas."));
+    navigator.clipboard.writeText(rel).then(() => alert("✅ Relatório copiado com sucesso!"));
 }
 
-// Inicialização
 renderizarResumo();
 renderizarGrupos();
