@@ -59,15 +59,45 @@ let progressoAlbum = JSON.parse(localStorage.getItem('stickerCollectorMaxProgres
 const figurinhasPorSelecao = 20; 
 let modoRepetidasAtivo = false; 
 let selecaoAberta = null;
+let nomesFigurinhas = {};
 
 const stickerView = document.getElementById('sticker-view');
 const groupsView = document.getElementById('groups-view');
 const bodyEl = document.getElementById('app-body');
-
-// --- SISTEMA DE BUSCA ---
 const searchContainer = document.getElementById('search-container');
 const searchInput = document.getElementById('search-input');
 const searchSuggestions = document.getElementById('search-suggestions');
+
+// --- LEITURA CORRIGIDA DO CSV ---
+async function carregarNomesCsv() {
+    try {
+        const response = await fetch('copa_2026_stickers.csv');
+        const data = await response.text();
+        // Divide as linhas tratando quebras do Windows (\r\n) e Mac/Linux (\n)
+        const linhas = data.split(/\r?\n/);
+        
+        for (let i = 1; i < linhas.length; i++) {
+            if (linhas[i].trim() === '') continue; // Ignora linhas em branco no fim do arquivo
+
+            const dadosLinha = linhas[i].split(',');
+            if (dadosLinha.length >= 4) {
+                // A ordem correta das colunas do seu arquivo:
+                // 0: País, 1: Código (MEX), 2: Número (1), 3: Nome (Guillermo Ochoa)
+                const teamCode = dadosLinha[1].trim(); 
+                const number = parseInt(dadosLinha[2].trim()); 
+                const name = dadosLinha[3].trim(); 
+
+                if (!nomesFigurinhas[teamCode]) {
+                    nomesFigurinhas[teamCode] = {};
+                }
+                nomesFigurinhas[teamCode][number] = name;
+            }
+        }
+    } catch (error) { 
+        console.error('Erro ao ler CSV:', error); 
+    }
+}
+// --------------------------------
 
 function removerAcentos(str) { 
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); 
@@ -75,39 +105,22 @@ function removerAcentos(str) {
 
 searchInput.addEventListener('input', (e) => {
     const termo = removerAcentos(e.target.value.trim());
-    if (termo.length === 0) { 
-        searchSuggestions.style.display = 'none'; 
-        return; 
-    }
-    const filtrados = listaTodasSelecoes.filter(c => 
-        removerAcentos(c.name).includes(termo) || removerAcentos(c.id).includes(termo)
-    );
+    if (termo.length === 0) { searchSuggestions.style.display = 'none'; return; }
+    const filtrados = listaTodasSelecoes.filter(c => removerAcentos(c.name).includes(termo) || removerAcentos(c.id).includes(termo));
     searchSuggestions.innerHTML = '';
     if (filtrados.length > 0) {
         filtrados.forEach(c => {
             const div = document.createElement('div');
             div.className = 'suggestion-item';
             div.innerHTML = `<img class="suggestion-flag" src="https://flagcdn.com/w40/${c.flagCode}.png"><span class="suggestion-name">${c.name}</span>`;
-            div.onclick = () => { 
-                searchInput.value = ''; 
-                searchSuggestions.style.display = 'none'; 
-                abrirGradeSelecao(c); 
-            };
+            div.onclick = () => { searchInput.value = ''; searchSuggestions.style.display = 'none'; abrirGradeSelecao(c); };
             searchSuggestions.appendChild(div);
         });
         searchSuggestions.style.display = 'block';
-    } else { 
-        searchSuggestions.style.display = 'none'; 
-    }
+    } else { searchSuggestions.style.display = 'none'; }
 });
 
-// Esconder sugestões se clicar fora
-document.addEventListener('click', (e) => {
-    if (!searchContainer.contains(e.target)) {
-        searchSuggestions.style.display = 'none';
-    }
-});
-// ------------------------
+document.addEventListener('click', (e) => { if (!searchContainer.contains(e.target)) searchSuggestions.style.display = 'none'; });
 
 function mudarModo(modo) {
     modoRepetidasAtivo = (modo === 'repetidas');
@@ -133,8 +146,7 @@ function renderizarResumo() {
 
 function renderizarGrupos() {
     groupsView.innerHTML = '';
-    groupsView.style.display = 'flex'; // CORREÇÃO: Garante que a tela de grupos fique visível
-    
+    groupsView.style.display = 'flex';
     Object.keys(dadosAlbumEstadicos).forEach(group => {
         const groupCard = document.createElement('div');
         groupCard.className = 'group-card';
@@ -163,7 +175,7 @@ function abrirGradeSelecao(country) {
     groupsView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'none';
     document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'none'); 
-    searchContainer.style.display = 'none'; 
+    searchContainer.style.display = 'none';
     stickerView.style.display = 'flex';
     document.getElementById('sticker-view-title').innerHTML = `<img class="country-flag" src="https://flagcdn.com/w40/${country.flagCode}.png"><span>${country.name}</span>`;
     const idx = listaTodasSelecoes.findIndex(c => c.id === country.id);
@@ -182,9 +194,16 @@ function renderizarGradeFigurinhas(country) {
     grid.innerHTML = '';
     const isFWC = country.id === "FWC";
     for (let i = (isFWC ? 0 : 1); i <= (isFWC ? 19 : 20); i++) {
+        const displayNum = i === 0 ? '00' : i;
+        
+        let stickerName = '---';
+        if (nomesFigurinhas[country.id] && nomesFigurinhas[country.id][i]) {
+            stickerName = nomesFigurinhas[country.id][i];
+        }
+
         const div = document.createElement('div');
         div.className = 'sticker';
-        div.innerHTML = `<span class="sticker-code">${country.id}</span><span class="sticker-num">${i === 0 ? '00' : i}</span><button class="btn-diminuir">-</button>`;
+        div.innerHTML = `<span class="sticker-code">${country.id}</span><span class="sticker-num">${displayNum}</span><span class="sticker-name">${stickerName}</span><button class="btn-diminuir">-</button>`;
         if (progressoAlbum[country.id] && progressoAlbum[country.id][i]) {
             const s = progressoAlbum[country.id][i];
             if (s.owned && !modoRepetidasAtivo) div.classList.add('owned');
@@ -230,14 +249,14 @@ function voltar() {
     stickerView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'flex';
     document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'flex'); 
-    searchContainer.style.display = 'flex'; 
-    searchInput.value = ''; // CORREÇÃO: Limpa a barra de pesquisa
-    renderizarGrupos(); // Ao chamar essa função, o display flex que adicionei entra em ação
+    searchContainer.style.display = 'flex';
+    searchInput.value = '';
+    renderizarGrupos();
 }
 
 function exportarArquivoBackup() {
     const dados = localStorage.getItem('stickerCollectorMaxProgress');
-    if (!dados || dados === '{}') { alert("Seu álbum está vazio."); return; }
+    if (!dados || dados === '{}') { alert("Vazio."); return; }
     const blob = new Blob([dados], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -259,8 +278,8 @@ function importarArquivoBackup(event) {
             progressoAlbum = JSON.parse(conteudo);
             renderizarResumo();
             renderizarGrupos();
-            alert("✅ Backup carregado com sucesso!");
-        } catch (erro) { alert("❌ Arquivo inválido. Certifique-se de carregar um arquivo de backup válido."); }
+            alert("Sucesso!");
+        } catch (erro) { alert("Erro arquivo."); }
         event.target.value = '';
     };
     leitor.readAsText(arquivo);
@@ -279,8 +298,13 @@ function gerarRelatorio() {
         if (rP.length > 0) reps += `*${c.id}:* ${rP.join(', ')}\n`;
     }));
     rel += "*🔴 FALTAM:*\n" + (faltam || "Nenhuma!\n") + "\n*🔵 REPETIDAS:*\n" + (reps || "Nenhuma!\n");
-    navigator.clipboard.writeText(rel).then(() => alert("✅ Relatório copiado com sucesso!"));
+    navigator.clipboard.writeText(rel).then(() => alert("Copiado!"));
 }
 
-renderizarResumo();
-renderizarGrupos();
+async function inicializarApp() {
+    await carregarNomesCsv();
+    renderizarResumo();
+    renderizarGrupos();
+}
+
+inicializarApp();

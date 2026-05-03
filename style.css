@@ -56,9 +56,8 @@ h2 { color: var(--text-color); font-size: 14px; font-weight: normal; margin: 5px
 }
 
 .btn-relatorio { background-color: #388e3c; color: white; border-color: #2e7d32; }
-.btn-relatorio:hover { background-color: #2e7d32; }
 
-/* --- ESTILOS DA BARRA DE PESQUISA --- */
+/* ESTILOS DA BUSCA */
 #search-container {
     display: flex; flex-direction: column; align-items: center;
     padding: 10px 20px 0; position: relative;
@@ -69,8 +68,7 @@ h2 { color: var(--text-color); font-size: 14px; font-weight: normal; margin: 5px
     width: 100%; padding: 12px 15px;
     border-radius: 8px; border: 1px solid var(--border-color);
     background-color: var(--card-bg-color); color: var(--header-color);
-    font-size: 16px; /* Evita o zoom no celular */
-    box-sizing: border-box; outline: none; transition: border-color 0.2s;
+    font-size: 16px; outline: none; transition: border-color 0.2s;
 }
 
 #search-input:focus { border-color: var(--accent-purple); }
@@ -78,20 +76,14 @@ h2 { color: var(--text-color); font-size: 14px; font-weight: normal; margin: 5px
 #search-suggestions {
     position: absolute; top: 100%; left: 20px; right: 20px;
     background-color: var(--card-bg-color); border: 1px solid var(--border-color);
-    border-top: none; border-radius: 0 0 8px 8px;
     max-height: 200px; overflow-y: auto; z-index: 100;
     display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
-.suggestion-item {
-    padding: 12px 15px; display: flex; align-items: center; gap: 10px;
-    cursor: pointer; border-bottom: 1px solid var(--border-color);
-}
-.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item { padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
 .suggestion-item:hover { background-color: var(--bg-color); }
 .suggestion-flag { width: 24px; border-radius: 2px; }
 .suggestion-name { color: var(--header-color); font-size: 14px; font-weight: bold; }
-/* ------------------------------------ */
 
 #groups-view { padding: 15px 20px 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
 .group-card { background-color: var(--card-bg-color); border-radius: 12px; width: 100%; max-width: 400px; padding: 15px; }
@@ -101,9 +93,8 @@ h2 { color: var(--text-color); font-size: 14px; font-weight: normal; margin: 5px
     background-color: var(--bg-color); border: 1px solid var(--border-color);
     border-radius: 8px; padding: 12px;
     display: flex; align-items: center; gap: 12px;
-    cursor: pointer; margin-bottom: 10px; transition: border-color 0.2s;
+    cursor: pointer; margin-bottom: 10px;
 }
-.country-pill:hover { border-color: var(--accent-purple); }
 
 .country-flag { width: 28px; height: auto; border-radius: 3px; display: block; }
 .country-name { color: var(--header-color); font-size: 16px; font-weight: bold; flex-grow: 1; }
@@ -115,7 +106,7 @@ h2 { color: var(--text-color); font-size: 14px; font-weight: normal; margin: 5px
 .country-progress-repetidas.tem-repetidas { background-color: var(--accent-repeated); color: white; }
 
 #sticker-view { display: none; padding: 20px; flex-direction: column; align-items: center; }
-.view-header { width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.view-header { width: 100%; max-width: 500px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .view-title { color: var(--header-color); font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
 
 .back-button, .next-button { 
@@ -125,36 +116,43 @@ h2 { color: var(--text-color); font-size: 14px; font-weight: normal; margin: 5px
     display: flex; align-items: center; justify-content: center; 
 }
 
-#sticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 400px; width: 100%; }
+#sticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 500px; width: 100%; }
 
 .sticker {
     aspect-ratio: 3/4; border-radius: 6px;
-    background-color: var(--sticker-missing); color: #757575;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background-color: var(--sticker-missing); color: #a1a1a1;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
     cursor: pointer; position: relative; border: 1px solid var(--border-color);
-    transition: all 0.2s;
+    transition: all 0.2s; padding: 10px 4px 6px; box-sizing: border-box;
 }
 
-.sticker-code { font-size: 11px; font-weight: bold; margin-bottom: 2px; pointer-events: none;}
-.sticker-num { font-size: 18px; font-weight: bold; pointer-events: none;}
+.sticker-code { font-size: 11px; font-weight: bold; margin-bottom: 2px; pointer-events: none; order: 1; }
+.sticker-num { font-size: 14px; font-weight: bold; pointer-events: none; order: 2; margin-top: auto; margin-bottom: auto; }
+
+.sticker-name {
+    font-size: 9px; font-weight: bold; pointer-events: none; order: 3;
+    text-align: center; width: 100%; margin-top: auto; color: #a1a1a1;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 
 .sticker.owned { background-color: var(--sticker-owned); color: white; border-color: #388e3c; }
+.sticker.owned .sticker-code, .sticker.owned .sticker-num, .sticker.owned .sticker-name { color: white; }
 
 .sticker.has-repeated::after {
     content: "+" attr(data-count);
     position: absolute; top: -6px; right: -6px;
     background-color: var(--accent-repeated); color: white;
     font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3); pointer-events: none; z-index: 5;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 5;
 }
 
-.modo-repetidas .sticker.has-repeated { background-color: #1a3a5a; border-color: var(--accent-repeated); color: var(--header-color); }
+.modo-repetidas .sticker.has-repeated { background-color: #1a3a5a; border-color: var(--accent-repeated); }
 
 .btn-diminuir { 
     display: none; position: absolute; bottom: -8px; left: -8px; 
     background-color: #d32f2f; color: white; border: none; border-radius: 50%; 
     width: 26px; height: 26px; font-size: 18px; font-weight: bold; 
     cursor: pointer; align-items: center; justify-content: center; 
-    z-index: 20; box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    z-index: 20; box-shadow: 0 2px 6px rgba(0,0,0,0.5); order: 10;
 }
 .modo-repetidas .btn-diminuir.visivel { display: flex; }
