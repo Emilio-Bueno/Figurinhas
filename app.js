@@ -165,7 +165,7 @@ function abrirGradeSelecao(country) {
     selecaoAberta = country;
     groupsView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'none';
-    document.querySelector('.modo-selector').style.display = 'none'; 
+    document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'none'); 
     stickerView.style.display = 'flex';
     document.getElementById('sticker-view-title').innerHTML = `<img class="country-flag" src="https://flagcdn.com/w40/${country.flagCode}.png"><span>${country.name}</span>`;
 
@@ -186,15 +186,12 @@ function renderizarGradeFigurinhas(country) {
     const stickerGrid = document.getElementById('sticker-grid');
     stickerGrid.innerHTML = '';
     
-    // REGRA NOVA: Se for FWC, começa no 0 e vai até 19. Senão, 1 a 20.
     const isFWC = country.id === "FWC";
     const numeroInicial = isFWC ? 0 : 1;
     const numeroFinal = isFWC ? 19 : figurinhasPorSelecao;
 
     for (let i = numeroInicial; i <= numeroFinal; i++) {
-        // Formata o número 0 para aparecer como "00" na tela
         const displayNum = (i === 0) ? "00" : i;
-
         const sticker = document.createElement('div');
         sticker.className = 'sticker';
         sticker.innerHTML = `<span class="sticker-code">${country.id}</span><span class="sticker-num">${displayNum}</span><button class="btn-diminuir" onclick="modificarRepetida('${country.id}', ${i}, -1, event)">-</button>`;
@@ -249,11 +246,10 @@ function voltar() {
     selecaoAberta = null;
     stickerView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'flex';
-    document.querySelector('.modo-selector').style.display = 'flex'; 
+    document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'flex'); 
     renderizarGrupos();
 }
 
-// --- FUNÇÃO DE RELATÓRIO PARA WHATSAPP (ATUALIZADA PARA FWC) ---
 function gerarRelatorio() {
     let relatorio = "*📋 MEU RELATÓRIO DE FIGURINHAS (2026)*\n\n";
     let faltamStr = "";
@@ -302,6 +298,35 @@ function gerarRelatorio() {
     }).catch(err => {
         alert("Erro ao copiar o relatório. Tente novamente.");
     });
+}
+
+function exportarBackup() {
+    const dados = localStorage.getItem('stickerCollectorMaxProgress');
+    if (!dados || dados === '{}') {
+        alert("Seu álbum está vazio. Não há o que criar.");
+        return;
+    }
+    navigator.clipboard.writeText(dados).then(() => {
+        alert("✅ Backup criado e copiado com sucesso!\n\nAgora vá no aplicativo onde quer carregar essas figurinhas, clique em 'Colar Backup' e cole o código.");
+    }).catch(err => {
+        alert("Erro ao copiar o backup. Tente novamente.");
+    });
+}
+
+function importarBackup() {
+    const codigo = prompt("Cole aqui o código de backup que você criou:");
+    if (codigo) {
+        try {
+            JSON.parse(codigo); 
+            localStorage.setItem('stickerCollectorMaxProgress', codigo);
+            progressoAlbum = JSON.parse(codigo);
+            renderizarResumo();
+            renderizarGrupos();
+            alert("✅ Álbum restaurado com sucesso!");
+        } catch (e) {
+            alert("❌ Código inválido! Certifique-se de que copiou o texto inteiro do backup.");
+        }
+    }
 }
 
 // Inicialização

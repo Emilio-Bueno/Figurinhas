@@ -35,7 +35,12 @@
     <div class="modo-selector">
         <button id="btn-modo-album" class="btn-modo active" onclick="mudarModo('album')">Meu Álbum</button>
         <button id="btn-modo-repetidas" class="btn-modo" onclick="mudarModo('repetidas')">Repetidas</button>
-        <button class="btn-modo btn-relatorio" onclick="gerarRelatorio()">📱 Relatório</button>
+        <button class="btn-modo btn-relatorio" onclick="gerarRelatorio()">Relatório</button>
+    </div>
+
+    <div class="modo-selector" style="margin-top: 5px;">
+        <button class="btn-modo" style="background-color: #f57c00; color: white; border-color: #e65100;" onclick="exportarBackup()">Criar Backup</button>
+        <button class="btn-modo" style="background-color: #1976d2; color: white; border-color: #0d47a1;" onclick="importarBackup()">Colar Backup</button>
     </div>
 
     <div id="groups-view"></div>
