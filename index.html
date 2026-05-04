@@ -57,6 +57,13 @@
             <span class="view-title" id="sticker-view-title"></span>
             <div class="next-button" id="btn-next" onclick="proximaSelecao()">→</div>
         </div>
+
+        <div id="sticker-filters" class="modo-selector" style="margin-bottom: 15px; max-width: 500px; padding: 0;">
+            <button id="btn-filtro-todas" class="btn-modo active" onclick="aplicarFiltro('todas')">Todas</button>
+            <button id="btn-filtro-faltantes" class="btn-modo" onclick="aplicarFiltro('faltantes')">Faltantes</button>
+            <button id="btn-filtro-repetidas" class="btn-modo" onclick="aplicarFiltro('repetidas')">Repetidas</button>
+        </div>
+
         <div id="sticker-grid"></div>
     </div>
 
