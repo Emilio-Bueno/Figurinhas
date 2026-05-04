@@ -1,5 +1,8 @@
 const dadosAlbumEstadicos = {
-    "Especiais": [{ id: "FWC", name: "FIFA World Cup", flagCode: "un" }],
+    "Especiais": [
+        { id: "FWC", name: "FIFA World Cup", flagCode: "un" },
+        { id: "CC", name: "Coca-Cola", flagCode: "un" }
+    ],
     "Grupo A": [
         { id: "MEX", name: "México", flagCode: "mx" }, { id: "RSA", name: "África do Sul", flagCode: "za" },
         { id: "KOR", name: "Coreia do Sul", flagCode: "kr" }, { id: "CZE", name: "Rep. Tcheca", flagCode: "cz" }
@@ -56,7 +59,6 @@ Object.keys(dadosAlbumEstadicos).forEach(group => {
 });
 
 let progressoAlbum = JSON.parse(localStorage.getItem('stickerCollectorMaxProgress')) || {};
-const figurinhasPorSelecao = 20; 
 let modoRepetidasAtivo = false; 
 let selecaoAberta = null;
 let nomesFigurinhas = {};
@@ -68,37 +70,46 @@ const searchContainer = document.getElementById('search-container');
 const searchInput = document.getElementById('search-input');
 const searchSuggestions = document.getElementById('search-suggestions');
 
-// --- LEITURA CORRIGIDA DO CSV ---
+// --- NOVA FUNÇÃO DE REGRAS DE QUANTIDADE ---
+function obterInfoSelecao(id) {
+    if (id === 'FWC') return { inicio: 0, fim: 19, total: 20 };
+    if (id === 'CC') return { inicio: 1, fim: 14, total: 14 }; // Regra da Coca-Cola
+    return { inicio: 1, fim: 20, total: 20 }; // Padrão
+}
+
+// CARREGA CSV DE FORMA ROBUSTA
 async function carregarNomesCsv() {
     try {
         const response = await fetch('copa_2026_stickers.csv');
         const data = await response.text();
-        // Divide as linhas tratando quebras do Windows (\r\n) e Mac/Linux (\n)
         const linhas = data.split(/\r?\n/);
         
         for (let i = 1; i < linhas.length; i++) {
-            if (linhas[i].trim() === '') continue; // Ignora linhas em branco no fim do arquivo
+            if (linhas[i].trim() === '') continue;
 
             const dadosLinha = linhas[i].split(',');
             if (dadosLinha.length >= 4) {
-                // A ordem correta das colunas do seu arquivo:
-                // 0: País, 1: Código (MEX), 2: Número (1), 3: Nome (Guillermo Ochoa)
-                const teamCode = dadosLinha[1].trim(); 
-                const number = parseInt(dadosLinha[2].trim()); 
-                const name = dadosLinha[3].trim(); 
+                const teamCode = dadosLinha[1].trim();
+                const number = parseInt(dadosLinha[2].trim());
+                const name = dadosLinha[3].trim();
 
-                if (!nomesFigurinhas[teamCode]) {
-                    nomesFigurinhas[teamCode] = {};
+                let normalizedCode = teamCode;
+                if (teamCode === 'SWI') normalizedCode = 'SUI';
+                else if (teamCode === 'JAP') normalizedCode = 'JPN';
+                else if (teamCode === 'KAS') normalizedCode = 'KSA';
+
+                if (!nomesFigurinhas[normalizedCode]) {
+                    nomesFigurinhas[normalizedCode] = {};
                 }
-                nomesFigurinhas[teamCode][number] = name;
+                nomesFigurinhas[normalizedCode][number] = name;
             }
         }
     } catch (error) { 
         console.error('Erro ao ler CSV:', error); 
     }
 }
-// --------------------------------
 
+// BUSCA
 function removerAcentos(str) { 
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); 
 }
@@ -134,13 +145,20 @@ function mudarModo(modo) {
 }
 
 function renderizarResumo() {
-    let totalNoAlbum = 0, repeatedTotal = 0;
+    let totalNoAlbum = 0, repeatedTotal = 0, totalPossivel = 0;
+    
+    // Calcula o total possível dinamicamente lendo as regras
+    listaTodasSelecoes.forEach(c => {
+        totalPossivel += obterInfoSelecao(c.id).total;
+    });
+
     Object.keys(progressoAlbum).forEach(p => Object.keys(progressoAlbum[p]).forEach(n => {
         if (progressoAlbum[p][n].owned) totalNoAlbum++;
         repeatedTotal += (progressoAlbum[p][n].repeatedCount || 0);
     }));
+    
     document.getElementById('stat-total').textContent = totalNoAlbum;
-    document.getElementById('stat-missing').textContent = 980 - totalNoAlbum;
+    document.getElementById('stat-missing').textContent = totalPossivel - totalNoAlbum;
     document.getElementById('stat-repeated').textContent = repeatedTotal;
 }
 
@@ -153,13 +171,15 @@ function renderizarGrupos() {
         groupCard.innerHTML = `<div class="group-title">${group}</div>`;
         dadosAlbumEstadicos[group].forEach(c => {
             let obtidas = 0, repetidas = 0;
+            const info = obterInfoSelecao(c.id);
+
             if (progressoAlbum[c.id]) Object.keys(progressoAlbum[c.id]).forEach(n => {
                 if (progressoAlbum[c.id][n].owned) obtidas++;
                 repetidas += (progressoAlbum[c.id][n].repeatedCount || 0);
             });
             let htmlContador = modoRepetidasAtivo 
                 ? `<div class="country-progress-repetidas ${repetidas > 0 ? 'tem-repetidas' : ''}">${repetidas}</div>`
-                : `<div class="country-progress ${obtidas === 20 ? 'completado' : ''}">${obtidas}/20</div>`;
+                : `<div class="country-progress ${obtidas === info.total ? 'completado' : ''}">${obtidas}/${info.total}</div>`;
             const pill = document.createElement('div');
             pill.className = 'country-pill';
             pill.onclick = () => abrirGradeSelecao(c);
@@ -175,7 +195,7 @@ function abrirGradeSelecao(country) {
     groupsView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'none';
     document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'none'); 
-    searchContainer.style.display = 'none';
+    searchContainer.style.display = 'none'; 
     stickerView.style.display = 'flex';
     document.getElementById('sticker-view-title').innerHTML = `<img class="country-flag" src="https://flagcdn.com/w40/${country.flagCode}.png"><span>${country.name}</span>`;
     const idx = listaTodasSelecoes.findIndex(c => c.id === country.id);
@@ -192,18 +212,22 @@ function proximaSelecao() {
 function renderizarGradeFigurinhas(country) {
     const grid = document.getElementById('sticker-grid');
     grid.innerHTML = '';
-    const isFWC = country.id === "FWC";
-    for (let i = (isFWC ? 0 : 1); i <= (isFWC ? 19 : 20); i++) {
-        const displayNum = i === 0 ? '00' : i;
-        
+    
+    const info = obterInfoSelecao(country.id);
+
+    for (let i = info.inicio; i <= info.fim; i++) {
         let stickerName = '---';
         if (nomesFigurinhas[country.id] && nomesFigurinhas[country.id][i]) {
             stickerName = nomesFigurinhas[country.id][i];
+        } else if (country.id === 'CC') {
+            stickerName = `Coca-Cola ${i}`; // Fallback visual para a CC caso não tenha no CSV
         }
 
+        const displayNum = i === 0 ? '00' : i;
         const div = document.createElement('div');
         div.className = 'sticker';
         div.innerHTML = `<span class="sticker-code">${country.id}</span><span class="sticker-num">${displayNum}</span><span class="sticker-name">${stickerName}</span><button class="btn-diminuir">-</button>`;
+        
         if (progressoAlbum[country.id] && progressoAlbum[country.id][i]) {
             const s = progressoAlbum[country.id][i];
             if (s.owned && !modoRepetidasAtivo) div.classList.add('owned');
@@ -213,6 +237,7 @@ function renderizarGradeFigurinhas(country) {
                 div.querySelector('.btn-diminuir').classList.add('visivel');
             }
         }
+
         div.onclick = (e) => { 
             if (e.target.classList.contains('btn-diminuir')) return;
             if (e.shiftKey && modoRepetidasAtivo) {
@@ -273,7 +298,7 @@ function importarArquivoBackup(event) {
     leitor.onload = (e) => {
         try {
             const conteudo = e.target.result;
-            JSON.parse(conteudo); 
+            JSON.parse(conteudo);
             localStorage.setItem('stickerCollectorMaxProgress', conteudo);
             progressoAlbum = JSON.parse(conteudo);
             renderizarResumo();
@@ -288,8 +313,10 @@ function importarArquivoBackup(event) {
 function gerarRelatorio() {
     let rel = "*📋 RELATÓRIO 2026*\n\n", faltam = "", reps = "";
     Object.keys(dadosAlbumEstadicos).forEach(g => dadosAlbumEstadicos[g].forEach(c => {
-        let fP = [], rP = [], isF = c.id === "FWC";
-        for (let i = (isF?0:1); i <= (isF?19:20); i++) {
+        let fP = [], rP = [];
+        const info = obterInfoSelecao(c.id);
+        
+        for (let i = info.inicio; i <= info.fim; i++) {
             let s = progressoAlbum[c.id] ? progressoAlbum[c.id][i] : null;
             if (!s || !s.owned) fP.push(i === 0 ? '00' : i);
             if (s && s.repeatedCount > 0) rP.push(`${i === 0 ? '00' : i}(+${s.repeatedCount})`);
