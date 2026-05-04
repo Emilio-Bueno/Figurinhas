@@ -70,14 +70,12 @@ const searchContainer = document.getElementById('search-container');
 const searchInput = document.getElementById('search-input');
 const searchSuggestions = document.getElementById('search-suggestions');
 
-// --- NOVA FUNÇÃO DE REGRAS DE QUANTIDADE ---
 function obterInfoSelecao(id) {
     if (id === 'FWC') return { inicio: 0, fim: 19, total: 20 };
-    if (id === 'CC') return { inicio: 1, fim: 14, total: 14 }; // Regra da Coca-Cola
-    return { inicio: 1, fim: 20, total: 20 }; // Padrão
+    if (id === 'CC') return { inicio: 1, fim: 14, total: 14 }; 
+    return { inicio: 1, fim: 20, total: 20 }; 
 }
 
-// CARREGA CSV DE FORMA ROBUSTA
 async function carregarNomesCsv() {
     try {
         const response = await fetch('copa_2026_stickers.csv');
@@ -109,7 +107,6 @@ async function carregarNomesCsv() {
     }
 }
 
-// BUSCA
 function removerAcentos(str) { 
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); 
 }
@@ -144,18 +141,25 @@ function mudarModo(modo) {
     else renderizarGrupos();
 }
 
+// --- CONTADOR À PROVA DE FANTASMAS ---
 function renderizarResumo() {
     let totalNoAlbum = 0, repeatedTotal = 0, totalPossivel = 0;
     
-    // Calcula o total possível dinamicamente lendo as regras
     listaTodasSelecoes.forEach(c => {
-        totalPossivel += obterInfoSelecao(c.id).total;
-    });
+        const info = obterInfoSelecao(c.id);
+        totalPossivel += info.total;
 
-    Object.keys(progressoAlbum).forEach(p => Object.keys(progressoAlbum[p]).forEach(n => {
-        if (progressoAlbum[p][n].owned) totalNoAlbum++;
-        repeatedTotal += (progressoAlbum[p][n].repeatedCount || 0);
-    }));
+        // O contador agora testa CADA NÚMERO respeitando a regra da seleção, 
+        // ignorando o que for fantasma ou fora da regra.
+        if (progressoAlbum[c.id]) {
+            for (let i = info.inicio; i <= info.fim; i++) {
+                if (progressoAlbum[c.id][i]) {
+                    if (progressoAlbum[c.id][i].owned) totalNoAlbum++;
+                    repeatedTotal += (progressoAlbum[c.id][i].repeatedCount || 0);
+                }
+            }
+        }
+    });
     
     document.getElementById('stat-total').textContent = totalNoAlbum;
     document.getElementById('stat-missing').textContent = totalPossivel - totalNoAlbum;
@@ -173,10 +177,16 @@ function renderizarGrupos() {
             let obtidas = 0, repetidas = 0;
             const info = obterInfoSelecao(c.id);
 
-            if (progressoAlbum[c.id]) Object.keys(progressoAlbum[c.id]).forEach(n => {
-                if (progressoAlbum[c.id][n].owned) obtidas++;
-                repetidas += (progressoAlbum[c.id][n].repeatedCount || 0);
-            });
+            // Contador cego à prova de fantasmas
+            if (progressoAlbum[c.id]) {
+                for (let i = info.inicio; i <= info.fim; i++) {
+                    if (progressoAlbum[c.id][i]) {
+                        if (progressoAlbum[c.id][i].owned) obtidas++;
+                        repetidas += (progressoAlbum[c.id][i].repeatedCount || 0);
+                    }
+                }
+            }
+
             let htmlContador = modoRepetidasAtivo 
                 ? `<div class="country-progress-repetidas ${repetidas > 0 ? 'tem-repetidas' : ''}">${repetidas}</div>`
                 : `<div class="country-progress ${obtidas === info.total ? 'completado' : ''}">${obtidas}/${info.total}</div>`;
@@ -220,7 +230,7 @@ function renderizarGradeFigurinhas(country) {
         if (nomesFigurinhas[country.id] && nomesFigurinhas[country.id][i]) {
             stickerName = nomesFigurinhas[country.id][i];
         } else if (country.id === 'CC') {
-            stickerName = `Coca-Cola ${i}`; // Fallback visual para a CC caso não tenha no CSV
+            stickerName = `Coca-Cola ${i}`;
         }
 
         const displayNum = i === 0 ? '00' : i;
