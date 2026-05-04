@@ -62,8 +62,6 @@ let progressoAlbum = JSON.parse(localStorage.getItem('stickerCollectorMaxProgres
 let modoRepetidasAtivo = false; 
 let selecaoAberta = null;
 let nomesFigurinhas = {};
-
-// NOVA VARIÁVEL: Guarda o estado do filtro atual (todas, faltantes, repetidas)
 let filtroAtual = 'todas';
 
 const stickerView = document.getElementById('sticker-view');
@@ -139,13 +137,11 @@ function mudarModo(modo) {
     else renderizarGrupos();
 }
 
-// NOVA FUNÇÃO: Aplica a regra de filtro e redesenha as figurinhas
 function aplicarFiltro(filtro, reRenderizar = true) {
     filtroAtual = filtro;
     document.getElementById('btn-filtro-todas').classList.toggle('active', filtro === 'todas');
     document.getElementById('btn-filtro-faltantes').classList.toggle('active', filtro === 'faltantes');
     document.getElementById('btn-filtro-repetidas').classList.toggle('active', filtro === 'repetidas');
-    
     if (reRenderizar && selecaoAberta) {
         renderizarGradeFigurinhas(selecaoAberta);
     }
@@ -153,23 +149,31 @@ function aplicarFiltro(filtro, reRenderizar = true) {
 
 function renderizarResumo() {
     let totalNoAlbum = 0, repeatedTotal = 0, totalPossivel = 0;
-    
+
     listaTodasSelecoes.forEach(c => {
         const info = obterInfoSelecao(c.id);
         totalPossivel += info.total;
+
         if (progressoAlbum[c.id]) {
             for (let i = info.inicio; i <= info.fim; i++) {
                 if (progressoAlbum[c.id][i]) {
-                    if (progressoAlbum[c.id][i].owned) totalNoAlbum++;
+                    if (progressoAlbum[c.id][i].owned) {
+                        totalNoAlbum++;
+                    }
                     repeatedTotal += (progressoAlbum[c.id][i].repeatedCount || 0);
                 }
             }
         }
     });
-    
+
     document.getElementById('stat-total').textContent = totalNoAlbum;
     document.getElementById('stat-missing').textContent = totalPossivel - totalNoAlbum;
     document.getElementById('stat-repeated').textContent = repeatedTotal;
+
+    // Atualiza a barra de progresso total e centraliza a porcentagem
+    const percentualGlobal = totalPossivel > 0 ? ((totalNoAlbum / totalPossivel) * 100) : 0;
+    document.getElementById('album-progress-fill').style.width = `${percentualGlobal}%`;
+    document.getElementById('album-percent-text').textContent = `${percentualGlobal.toFixed(1)}% Concluído`;
 }
 
 function renderizarGrupos() {
@@ -192,7 +196,6 @@ function renderizarGrupos() {
                 }
             }
 
-            // CÁLCULO DA BARRA DE PROGRESSO
             const percentual = (obtidas / info.total) * 100;
             const barraProgressoHtml = `<div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percentual}%"></div></div>`;
 
@@ -203,8 +206,6 @@ function renderizarGrupos() {
             const pill = document.createElement('div');
             pill.className = 'country-pill';
             pill.onclick = () => abrirGradeSelecao(c);
-            
-            // Inserindo a barra de progresso no HTML da pílula
             pill.innerHTML = `<img class="country-flag" src="https://flagcdn.com/w40/${c.flagCode}.png"><div class="country-name">${c.name}</div>${htmlContador}${barraProgressoHtml}`;
             groupCard.appendChild(pill);
         });
@@ -220,10 +221,7 @@ function abrirGradeSelecao(country) {
     searchContainer.style.display = 'none'; 
     stickerView.style.display = 'flex';
     
-    // Mostra a barrinha de filtros própria das figurinhas
     document.getElementById('sticker-filters').style.display = 'flex';
-    
-    // Sempre reseta o filtro para "Todas" ao abrir uma seleção nova
     aplicarFiltro('todas', false); 
 
     document.getElementById('sticker-view-title').innerHTML = `<img class="country-flag" src="https://flagcdn.com/w40/${country.flagCode}.png"><span>${country.name}</span>`;
@@ -254,7 +252,6 @@ function renderizarGradeFigurinhas(country) {
             repeatedCount = progressoAlbum[country.id][i].repeatedCount || 0;
         }
 
-        // LÓGICA DO FILTRO: Esconde a figurinha se ela não bater com o filtro escolhido
         if (filtroAtual === 'faltantes' && isOwned) continue;
         if (filtroAtual === 'repetidas' && repeatedCount === 0) continue;
 
@@ -265,7 +262,6 @@ function renderizarGradeFigurinhas(country) {
             stickerName = `Coca-Cola ${i}`;
         }
 
-        // IDENTIFICAÇÃO DE FIGURINHAS ESPECIAIS (Brilhantes/Emblemas/Troféus)
         const isEspecial = (i === 1 && country.id !== 'FWC' && country.id !== 'CC') || 
                            stickerName.toLowerCase().includes('emblem') || 
                            stickerName.toLowerCase().includes('troféu');
@@ -274,7 +270,6 @@ function renderizarGradeFigurinhas(country) {
         const div = document.createElement('div');
         div.className = 'sticker';
         
-        // Se for brilhante, adiciona a classe especial
         if (isEspecial) div.classList.add('especial');
 
         div.innerHTML = `<span class="sticker-code">${country.id}</span><span class="sticker-num">${displayNum}</span><span class="sticker-name">${stickerName}</span><button class="btn-diminuir">-</button>`;
@@ -292,19 +287,39 @@ function renderizarGradeFigurinhas(country) {
                 modificarRepetida(country.id, i, -1);
                 return;
             }
-            alternarStatus(country.id, i); renderizarGradeFigurinhas(country); 
+            alternarStatus(country.id, i); 
+            // Só renderiza novamente se o status for alterado com sucesso (a validação no alternarStatus permite)
         };
         div.querySelector('.btn-diminuir').onclick = (e) => { e.stopPropagation(); modificarRepetida(country.id, i, -1); };
         grid.appendChild(div);
     }
 }
 
+// NOVA VALIDAÇÃO ADICIONADA AQUI
 function alternarStatus(id, n) {
     if (!progressoAlbum[id]) progressoAlbum[id] = {};
     if (!progressoAlbum[id][n]) progressoAlbum[id][n] = { owned: false, repeatedCount: 0 };
-    if (modoRepetidasAtivo) progressoAlbum[id][n].repeatedCount++;
-    else progressoAlbum[id][n].owned = !progressoAlbum[id][n].owned;
+    
+    if (modoRepetidasAtivo) {
+        // Trava de segurança: impede repetidas sem ter a figurinha
+        if (!progressoAlbum[id][n].owned) {
+            alert("⚠️ Ops! Você não pode adicionar uma repetida se a figurinha ainda não está colada no seu álbum.");
+            return; // Sai da função sem salvar nada
+        }
+        progressoAlbum[id][n].repeatedCount++;
+    } else {
+        progressoAlbum[id][n].owned = !progressoAlbum[id][n].owned;
+        
+        // Limpeza inteligente: Se desmarcou do álbum, removemos as repetidas para não gerar fantasmas
+        if (!progressoAlbum[id][n].owned) {
+            progressoAlbum[id][n].repeatedCount = 0;
+        }
+    }
     salvar();
+    
+    if (selecaoAberta) {
+        renderizarGradeFigurinhas(selecaoAberta);
+    }
 }
 
 function modificarRepetida(id, n, q) {
@@ -321,13 +336,10 @@ function voltar() {
     selecaoAberta = null;
     stickerView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'flex';
-    
-    // Volta a mostrar os menus iniciais
     document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'flex'); 
-    document.getElementById('sticker-filters').style.display = 'none'; // Esconde os filtros locais
+    document.getElementById('sticker-filters').style.display = 'none'; 
     searchContainer.style.display = 'flex';
     searchInput.value = '';
-    
     renderizarGrupos();
 }
 
