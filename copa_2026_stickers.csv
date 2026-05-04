@@ -1,7 +1,24 @@
 País,Código,Número,Nome
-Host Country Emblem,FWC,6,Canada
-Host Country Emblem,FWC,7,Mexico
-Host Country Emblem,FWC,8,USA
+FIFA World Cup,FWC,0,Panini
+FIFA World Cup,FWC,1,FIFA
+FIFA World Cup,FWC,2,Troféu
+FIFA World Cup,FWC,3,Troféu
+FIFA World Cup,FWC,4,Mascote
+FIFA World Cup,FWC,5,Pôster Oficial
+FIFA World Cup,FWC,6,Sede Canadá
+FIFA World Cup,FWC,7,Sede México
+FIFA World Cup,FWC,8,Sede EUA
+FIFA World Cup,FWC,9,Itália 1934
+FIFA World Cup,FWC,10,Uruguai 1950
+FIFA World Cup,FWC,11,Alemanha Ocid. 1954
+FIFA World Cup,FWC,12,Brasil 1962
+FIFA World Cup,FWC,13,Alemanha Ocid. 1974
+FIFA World Cup,FWC,14,Argentina 1986
+FIFA World Cup,FWC,15,Brasil 1994
+FIFA World Cup,FWC,16,Brasil 2002
+FIFA World Cup,FWC,17,Itália 2006
+FIFA World Cup,FWC,18,Alemanha 2014
+FIFA World Cup,FWC,19,Argentina 2022
 Algeria,ALG,1,Emblem
 Algeria,ALG,2,Alexis Guendouz
 Algeria,ALG,3,Ramy Bensebaini
@@ -10,26 +27,26 @@ Algeria,ALG,5,Rayan Aït-Nouri
 Algeria,ALG,6,Mohamed Amine Tougai
 Algeria,ALG,7,Aïssa Mandi
 Algeria,ALG,8,Ismael Bennacer
-Algeria,ALG,9,Houssem Aquar
+Algeria,ALG,9,Houssem Aouar
 Algeria,ALG,10,Hicham Boudaoui
 Algeria,ALG,11,Ramiz Zerrouki
-Algeria,ALG,12,Nabil Bentalab
+Algeria,ALG,12,Nabil Bentaleb
 Algeria,ALG,13,Team Photo
-Algeria,ALG,14,Farés Chaibi
+Algeria,ALG,14,Farès Chaïbi
 Algeria,ALG,15,Riyad Mahrez
-Algeria,ALG,16,Said Benrhama
+Algeria,ALG,16,Saïd Benrahma
 Algeria,ALG,17,Anis Hadj Moussa
 Algeria,ALG,18,Amine Gouiri
 Algeria,ALG,19,Baghdad Bounedjah
 Algeria,ALG,20,Mohammed Amoura
 Argentina,ARG,1,Emblem
-Argentina,ARG,2,Emiliano Martinez
+Argentina,ARG,2,Emiliano Martínez
 Argentina,ARG,3,Nahuel Molina
 Argentina,ARG,4,Cristian Romero
-Argentina,ARG,5,Nicolas Otamendi
-Argentina,ARG,6,Nicolas Tagliafico
+Argentina,ARG,5,Nicolás Otamendi
+Argentina,ARG,6,Nicolás Tagliafico
 Argentina,ARG,7,Leonardo Balerdi
-Argentina,ARG,8,Enzo Fernandez
+Argentina,ARG,8,Enzo Fernández
 Argentina,ARG,9,Alexis Mac Allister
 Argentina,ARG,10,Rodrigo De Paul
 Argentina,ARG,11,Exequiel Palacios
@@ -37,10 +54,10 @@ Argentina,ARG,12,Leandro Paredes
 Argentina,ARG,13,Team Photo
 Argentina,ARG,14,Nico Paz
 Argentina,ARG,15,Franco Mastantuono
-Argentina,ARG,16,Nico Gonzalez
+Argentina,ARG,16,Nico González
 Argentina,ARG,17,Lionel Messi
-Argentina,ARG,18,Lautaro Martinez
-Argentina,ARG,19,Julian Alvarez
+Argentina,ARG,18,Lautaro Martínez
+Argentina,ARG,19,Julián Álvarez
 Argentina,ARG,20,Giuliano Simeone
 Australia,AUS,1,Emblem
 Australia,AUS,2,Mathew Ryan
@@ -59,7 +76,7 @@ Australia,AUS,14,Aiden O'Neill
 Australia,AUS,15,Connor Metcalfe
 Australia,AUS,16,Patrick Yazbek
 Australia,AUS,17,Craig Goodwin
-Australia,AUS,18,Kusini Vengi
+Australia,AUS,18,Kusini Yengi
 Australia,AUS,19,Nestory Irankunda
 Australia,AUS,20,Mohamed Touré
 Austria,AUT,1,Emblem
@@ -68,10 +85,10 @@ Austria,AUT,3,Patrick Pentz
 Austria,AUT,4,David Alaba
 Austria,AUT,5,Kevin Danso
 Austria,AUT,6,Philipp Lienhart
-Austria,AUT,7,Stefan Bosch
+Austria,AUT,7,Stefan Posch
 Austria,AUT,8,Phillipp Mwene
 Austria,AUT,9,Alexander Prass
-Austria,AUT,10,Xavier Schlager
+Austria,AUT,10,Xaver Schlager
 Austria,AUT,11,Marcel Sabitzer
 Austria,AUT,12,Konrad Laimer
 Austria,AUT,13,Team Photo
@@ -104,11 +121,11 @@ Belgium,BEL,19,Loïs Openda
 Belgium,BEL,20,Romelu Lukaku
 Bosnia and Herzegovina,BIH,1,Emblem
 Bosnia and Herzegovina,BIH,2,Nikola Vasilj
-Bosnia and Herzegovina,BIH,3,Amer Dedic
-Bosnia and Herzegovina,BIH,4,Sead Kolasinac
+Bosnia and Herzegovina,BIH,3,Amar Dedić
+Bosnia and Herzegovina,BIH,4,Sead Kolašinac
 Bosnia and Herzegovina,BIH,5,Tarik Muharemovic
 Bosnia and Herzegovina,BIH,6,Nihad Mujakic
-Bosnia and Herzegovina,BIH,7,Nikola Katic
+Bosnia and Herzegovina,BIH,7,Nikola Katić
 Bosnia and Herzegovina,BIH,8,Amir Hadziahmetovic
 Bosnia and Herzegovina,BIH,9,Benjamin Tahirovic
 Bosnia and Herzegovina,BIH,10,Armin Gigovic
@@ -118,9 +135,9 @@ Bosnia and Herzegovina,BIH,13,Team Photo
 Bosnia and Herzegovina,BIH,14,Dzenis Burnic
 Bosnia and Herzegovina,BIH,15,Esmir Bajraktarevic
 Bosnia and Herzegovina,BIH,16,Amar Memic
-Bosnia and Herzegovina,BIH,17,Ermedin Demirovic
-Bosnia and Herzegovina,BIH,18,Edin Dzeko
-Bosnia and Herzegovina,BIH,19,Samed Bazdar
+Bosnia and Herzegovina,BIH,17,Ermedin Demirović
+Bosnia and Herzegovina,BIH,18,Edin Džeko
+Bosnia and Herzegovina,BIH,19,Samed Baždar
 Bosnia and Herzegovina,BIH,20,Haris Tabakovic
 Brazil,BRA,1,Emblem
 Brazil,BRA,2,Alisson
@@ -135,19 +152,19 @@ Brazil,BRA,10,Casemiro
 Brazil,BRA,11,Bruno Guimarães
 Brazil,BRA,12,Luiz Henrique
 Brazil,BRA,13,Team Photo
-Brazil,BRA,14,Vinicius Júnior
+Brazil,BRA,14,Vinícius Júnior
 Brazil,BRA,15,Rodrygo
 Brazil,BRA,16,João Pedro
 Brazil,BRA,17,Matheus Cunha
 Brazil,BRA,18,Gabriel Martinelli
 Brazil,BRA,19,Raphinha
-Brazil,BRA,20,Estévão
+Brazil,BRA,20,Estêvão
 Canada,CAN,1,Emblem
 Canada,CAN,2,Dayne St.Clair
 Canada,CAN,3,Alphonso Davies
 Canada,CAN,4,Alistair Johnston
 Canada,CAN,5,Samuel Adekugbe
-Canada,CAN,6,Riche Larvea
+Canada,CAN,6,Richie Laryea
 Canada,CAN,7,Derek Cornelius
 Canada,CAN,8,Moïse Bombito
 Canada,CAN,9,Kamal Miller
@@ -178,7 +195,7 @@ Ivory Coast,CIV,13,Team Photo
 Ivory Coast,CIV,14,Jean-Philippe Gbamin
 Ivory Coast,CIV,15,Amad Diallo
 Ivory Coast,CIV,16,Sébastien Haller
-Ivory Coast,CIV,17,Simon Adringa
+Ivory Coast,CIV,17,Simon Adingra
 Ivory Coast,CIV,18,Yan Diomande
 Ivory Coast,CIV,19,Evann Guessand
 Ivory Coast,CIV,20,Oumar Diakite
@@ -207,7 +224,7 @@ Colombia,COL,2,Camilo Vargas
 Colombia,COL,3,David Ospina
 Colombia,COL,4,Dávinson Sánchez
 Colombia,COL,5,Yerry Mina
-Colombia,COL,6,Daniel Munoz
+Colombia,COL,6,Daniel Muñoz
 Colombia,COL,7,Johan Mojica
 Colombia,COL,8,Jhon Lucumí
 Colombia,COL,9,Santiago Arias
@@ -215,13 +232,13 @@ Colombia,COL,10,Jefferson Lerma
 Colombia,COL,11,Kevin Castaño
 Colombia,COL,12,Richard Rios
 Colombia,COL,13,Team Photo
-Colombia,COL,14,James Rodriguez
+Colombia,COL,14,James Rodríguez
 Colombia,COL,15,Juan Fernando Quintero
 Colombia,COL,16,Jorge Carrascal
 Colombia,COL,17,Jhon Arias
-Colombia,COL,18,Jhon Cordova
-Colombia,COL,19,Luis Suarez
-Colombia,COL,20,Luis Diaz
+Colombia,COL,18,Jhon Córdoba
+Colombia,COL,19,Luis Suárez
+Colombia,COL,20,Luis Díaz
 Cape Verde,CPV,1,Emblem
 Cape Verde,CPV,2,Vozinha
 Cape Verde,CPV,3,Logan Costa
@@ -244,21 +261,21 @@ Cape Verde,CPV,19,Willy Semedo
 Cape Verde,CPV,20,Bebe
 Croatia,CRO,1,Emblem
 Croatia,CRO,2,Dominik Livaković
-Croatia,CRO,3,Duje Caleta-Car
-Croatia,CRO,4,Josko Gvardiol
+Croatia,CRO,3,Duje Ćaleta-Car
+Croatia,CRO,4,Joško Gvardiol
 Croatia,CRO,5,Josip Stanišić
 Croatia,CRO,6,Luka Vušković
-Croatia,CRO,7,Josip Sutalo
-Croatia,CRO,8,Kristijan Jakic
+Croatia,CRO,7,Josip Šutalo
+Croatia,CRO,8,Kristijan Jakić
 Croatia,CRO,9,Luka Modrić
-Croatia,CRO,10,Mateo Kovacic
+Croatia,CRO,10,Mateo Kovačić
 Croatia,CRO,11,Martin Baturina
 Croatia,CRO,12,Lovro Majer
 Croatia,CRO,13,Team Photo
-Croatia,CRO,14,Mario Pasalic
-Croatia,CRO,15,Petar Sucic
+Croatia,CRO,14,Mario Pašalić
+Croatia,CRO,15,Petar Sučić
 Croatia,CRO,16,Ivan Perišić
-Croatia,CRO,17,Marco Pasalic
+Croatia,CRO,17,Marco Pašalić
 Croatia,CRO,18,Ante Budimir
 Croatia,CRO,19,Andrej Kramarić
 Croatia,CRO,20,Franjo Ivanovic
@@ -266,7 +283,7 @@ Curaçao,CUW,1,Emblem
 Curaçao,CUW,2,Eloy Room
 Curaçao,CUW,3,Armando Obispo
 Curaçao,CUW,4,Sherel Floranus
-Curaçao,CUW,5,Jurien Gaari
+Curaçao,CUW,5,Juriën Gaari
 Curaçao,CUW,6,Joshua Brenet
 Curaçao,CUW,7,Roshon Van Eijma
 Curaçao,CUW,8,Shurandy Sambo
@@ -299,7 +316,7 @@ Czechia,CZE,14,Pavel Sulc
 Czechia,CZE,15,Matej Vydra
 Czechia,CZE,16,Vasil Kusej
 Czechia,CZE,17,Tomas Chory
-Czechia,CZE,18,Vacilav Cerny
+Czechia,CZE,18,Václav Černý
 Czechia,CZE,19,Adam Hlozek
 Czechia,CZE,20,Patrik Schick
 Ecuador,ECU,1,Emblem
@@ -315,7 +332,7 @@ Ecuador,ECU,10,Alan Franco
 Ecuador,ECU,11,Kendry Paez
 Ecuador,ECU,12,Pedro Vite
 Ecuador,ECU,13,Team Photo
-Ecuador,ECU,14,John Veboah
+Ecuador,ECU,14,John Yeboah
 Ecuador,ECU,15,Leonardo Campana
 Ecuador,ECU,16,Gonzalo Plata
 Ecuador,ECU,17,Nilson Angulo
@@ -341,11 +358,11 @@ Egypt,EGY,16,Osama Faisal
 Egypt,EGY,17,Mohamed Salah
 Egypt,EGY,18,Mostafa Mohamed
 Egypt,EGY,19,Trezeguet
-Egypt,EGY,20,Omar Marsmoush
+Egypt,EGY,20,Omar Marmoush
 England,ENG,1,Emblem
 England,ENG,2,Jordan Pickford
 England,ENG,3,John Stones
-England,ENG,4,Maric Guéhi
+England,ENG,4,Marc Guéhi
 England,ENG,5,Ezri Konsa
 England,ENG,6,Trent Alexander-Arnold
 England,ENG,7,Reece James
@@ -373,7 +390,7 @@ Spain,ESP,8,Marc Cucurella
 Spain,ESP,9,Martín Zubimendi
 Spain,ESP,10,Rodri
 Spain,ESP,11,Pedri
-Spain,ESP,12,Fabian Ruiz
+Spain,ESP,12,Fabián Ruiz
 Spain,ESP,13,Team Photo
 Spain,ESP,14,Mikel Merino
 Spain,ESP,15,Lamine Yamal
@@ -386,7 +403,7 @@ France,FRA,1,Emblem
 France,FRA,2,Mike Maignan
 France,FRA,3,Theo Hernandez
 France,FRA,4,William Saliba
-France,FRA,5,Jules Kounde
+France,FRA,5,Jules Koundé
 France,FRA,6,Ibrahima Konate
 France,FRA,7,Dayot Upamecano
 France,FRA,8,Lucas Digne
@@ -396,12 +413,12 @@ France,FRA,11,Manu Kone
 France,FRA,12,Adrien Rabiot
 France,FRA,13,Team Photo
 France,FRA,14,Michael Olise
-France,FRA,15,Ousmane Dembele
+France,FRA,15,Ousmane Dembélé
 France,FRA,16,Bradley Barcola
 France,FRA,17,Désiré Doué
 France,FRA,18,Kingsley Coman
 France,FRA,19,Hugo Ekitike
-France,FRA,20,Kylian Mbappe
+France,FRA,20,Kylian Mbappé
 Germany,GER,1,Emblem
 Germany,GER,2,Marc-André ter Stegen
 Germany,GER,3,Jonathan Tah
@@ -438,7 +455,7 @@ Ghana,GHA,13,Team Photo
 Ghana,GHA,14,Mohammed Kudus
 Ghana,GHA,15,Inaki Williams
 Ghana,GHA,16,Jordan Ayew
-Ghana,GHA,17,Andrew Ayew
+Ghana,GHA,17,André Ayew
 Ghana,GHA,18,Joseph Paintsil
 Ghana,GHA,19,Osman Bukari
 Ghana,GHA,20,Antoine Semenyo
@@ -463,7 +480,7 @@ Haiti,HAI,18,Duckens Nazon
 Haiti,HAI,19,Louicius Deedson
 Haiti,HAI,20,Frantzdy Pierrot
 Iran,IRN,1,Emblem
-Iran,IRN,2,Alirez Beiranvand
+Iran,IRN,2,Alireza Beiranvand
 Iran,IRN,3,Morteza Pouraliganji
 Iran,IRN,4,Ehsan Hajsafi
 Iran,IRN,5,Milad Mohammadi
@@ -492,7 +509,7 @@ Iraq,IRQ,7,Zaid Tahseen
 Iraq,IRQ,8,Manaf Younis
 Iraq,IRQ,9,Zidane Iqbal
 Iraq,IRQ,10,Amir Al-Ammari
-Iraq,IRQ,11,Ibrahim Bavesh
+Iraq,IRQ,11,Ibrahim Bayesh
 Iraq,IRQ,12,Ali Jasim
 Iraq,IRQ,13,Team Photo
 Iraq,IRQ,14,Youssef Amyn
@@ -524,7 +541,7 @@ Jordan,JOR,19,Mohammad Abu Zrayq
 Jordan,JOR,20,Ibrahim Sabra
 Japan,JPN,1,Emblem
 Japan,JPN,2,Zion Suzuki
-Japan,JPN,3,Henry Heroki Mochizuki
+Japan,JPN,3,Henry Hiroki Mochizuki
 Japan,JPN,4,Ayumu Seko
 Japan,JPN,5,Junnosuke Suzuki
 Japan,JPN,6,Shogo Taniguchi
@@ -557,7 +574,7 @@ South Korea,KOR,12,Kang-in Lee
 South Korea,KOR,13,Team Photo
 South Korea,KOR,14,Seung-ho Paik
 South Korea,KOR,15,Jens Castrop
-South Korea,KOR,16,Dongg-yeong Lee
+South Korea,KOR,16,Dong-gyeong Lee
 South Korea,KOR,17,Gue-sung Cho
 South Korea,KOR,18,Heung-min Son
 South Korea,KOR,19,Hee-chan Hwang
@@ -579,7 +596,7 @@ Saudi Arabia,KSA,14,Saleh Abu Alshamat
 Saudi Arabia,KSA,15,Marwan Alsahafi
 Saudi Arabia,KSA,16,Salem Aldawsari
 Saudi Arabia,KSA,17,Abdulrahman Al-Aboud
-Saudi Arabia,KSA,18,Feras Akbrikan
+Saudi Arabia,KSA,18,Firas Al-Buraikan
 Saudi Arabia,KSA,19,Saleh Alshehri
 Saudi Arabia,KSA,20,Abdullah Al-Hamdan
 Morocco,MAR,1,Emblem
@@ -589,7 +606,7 @@ Morocco,MAR,4,Achraf Hakimi
 Morocco,MAR,5,Noussair Mazraoui
 Morocco,MAR,6,Nayef Aguerd
 Morocco,MAR,7,Roman Saiss
-Morocco,MAR,8,Jawad El Yamio
+Morocco,MAR,8,Jawad El Yamiq
 Morocco,MAR,9,Adam Masina
 Morocco,MAR,10,Sofyan Amrabat
 Morocco,MAR,11,Azzedine Ounahi
@@ -621,15 +638,15 @@ Mexico,MEX,16,Santiago Giménez
 Mexico,MEX,17,Raúl Jiménez
 Mexico,MEX,18,Alexis Vega
 Mexico,MEX,19,Roberto Alvarado
-Mexico,MEX,20,Cesar Huerta
+Mexico,MEX,20,César Huerta
 Netherlands,NED,1,Emblem
 Netherlands,NED,2,Bart Verbruggen
 Netherlands,NED,3,Virgil van Dijk
 Netherlands,NED,4,Micky van de Ven
-Netherlands,NED,5,Jurien Timber
+Netherlands,NED,5,Jurriën Timber
 Netherlands,NED,6,Denzel Dumfries
 Netherlands,NED,7,Nathan Aké
-Netherlands,NED,8,Jereme Frimpong
+Netherlands,NED,8,Jeremie Frimpong
 Netherlands,NED,9,Jan Paul van Hecke
 Netherlands,NED,10,Tijjani Reijnders
 Netherlands,NED,11,Ryan Gravenberch
@@ -663,7 +680,7 @@ Norway,NOR,18,Jorgen Strand Larsen
 Norway,NOR,19,Antonio Nusa
 Norway,NOR,20,Oscar Bobb
 New Zealand,NZL,1,Emblem
-New Zealand,NZL,2,Max Crocombe Payne
+New Zealand,NZL,2,Max Crocombe
 New Zealand,NZL,3,Alex Paulsen
 New Zealand,NZL,4,Michael Boxall
 New Zealand,NZL,5,Liberato Cacace
@@ -715,7 +732,7 @@ Paraguay,PAR,10,Diego Gomez
 Paraguay,PAR,11,Damián Bobadilla
 Paraguay,PAR,12,Andres Cubas
 Paraguay,PAR,13,Team Photo
-Paraguay,PAR,14,Matias Galarza Fonda
+Paraguay,PAR,14,Matías Galarza
 Paraguay,PAR,15,Julio Enciso
 Paraguay,PAR,16,Alejandro Romero Gamarra
 Paraguay,PAR,17,Miguel Almirón
@@ -737,8 +754,8 @@ Portugal,POR,12,Vitinha
 Portugal,POR,13,Team Photo
 Portugal,POR,14,João Neves
 Portugal,POR,15,Cristiano Ronaldo
-Portugal,POR,16,Francisco Trincao
-Portugal,POR,17,João Felix
+Portugal,POR,16,Francisco Trincão
+Portugal,POR,17,João Félix
 Portugal,POR,18,Gonçalo Ramos
 Portugal,POR,19,Pedro Neto
 Portugal,POR,20,Rafael Leão
@@ -801,7 +818,7 @@ Scotland,SCO,16,Kenny McLean
 Scotland,SCO,17,John McGinn
 Scotland,SCO,18,Lyndon Dykes
 Scotland,SCO,19,Che Adams
-Scotland,SCO,20,Ben Gannon-Doak
+Scotland,SCO,20,Ben Doak
 Senegal,SEN,1,Emblem
 Senegal,SEN,2,Eduardo Mendy
 Senegal,SEN,3,Yehvann Diouf
@@ -865,7 +882,7 @@ Sweden,SWE,20,Viktor Gyökeres
 Tunisia,TUN,1,Emblem
 Tunisia,TUN,2,Bechir Ben Said
 Tunisia,TUN,3,Aymen Dahmen
-Tunisia,TUN,4,Van Valery
+Tunisia,TUN,4,Yan Valery
 Tunisia,TUN,5,Montassar Talbi
 Tunisia,TUN,6,Yassine Meriah
 Tunisia,TUN,7,Ali Abdi
@@ -887,7 +904,7 @@ Türkiye,TUR,2,Ugurcan Cakir
 Türkiye,TUR,3,Mert Muldur
 Türkiye,TUR,4,Zeki Celik
 Türkiye,TUR,5,Abdulkerim Bardakci
-Türkiye,TUR,6,Caglar Soyunku
+Türkiye,TUR,6,Çağlar Söyüncü
 Türkiye,TUR,7,Merih Demiral
 Türkiye,TUR,8,Ferdi Kadioglu
 Türkiye,TUR,9,Kaan Ayhan
@@ -896,7 +913,7 @@ Türkiye,TUR,11,Hakan Calhanoglu
 Türkiye,TUR,12,Orkun Kokcu
 Türkiye,TUR,13,Team Photo
 Türkiye,TUR,14,Arda Guler
-Türkiye,TUR,15,Irfan Can Kahvecu
+Türkiye,TUR,15,İrfan Can Kahveci
 Türkiye,TUR,16,Yunus Akgun
 Türkiye,TUR,17,Can Uzun
 Türkiye,TUR,18,Baris Alper Yilmaz
@@ -936,7 +953,7 @@ United States,USA,11,Christian Roldan
 United States,USA,12,Timothy Weah
 United States,USA,13,Team Photo
 United States,USA,14,Diego Luna
-United States,USA,15,Malim Tillman
+United States,USA,15,Malik Tillman
 United States,USA,16,Christian Pulisic
 United States,USA,17,Brenden Aaronson
 United States,USA,18,Ricardo Pepi
@@ -944,7 +961,7 @@ United States,USA,19,Haji Wright
 United States,USA,20,Folarin Balogun
 Uzbekistan,UZB,1,Emblem
 Uzbekistan,UZB,2,Utkir Yusupov
-Uzbekistan,UZB,3,Farrukh Savfiev
+Uzbekistan,UZB,3,Farrukh Sayfiev
 Uzbekistan,UZB,4,Sherzod Nasrullaev
 Uzbekistan,UZB,5,Umar Eshmurodov
 Uzbekistan,UZB,6,Husniddin Aliqulov
@@ -962,14 +979,17 @@ Uzbekistan,UZB,17,Oston Urunov
 Uzbekistan,UZB,18,Jaloliddin Masharipov
 Uzbekistan,UZB,19,Igor Sergeev
 Uzbekistan,UZB,20,Abbosbek Fayzullaev
-Italy 1934,FWC,9,Team Photo
-Uruguay 1950,FWC,10,Team Photo
-West Germany 1954,FWC,11,Team Photo
-Brazil 1962,FWC,12,Team Photo
-West Germany 1974,FWC,13,Team Photo
-Argentina 1986,FWC,14,Team Photo
-Brazil 1994,FWC,15,Team Photo
-Brazil 2002,FWC,16,Team Photo
-Italy 2006,FWC,17,Team Photo
-Germany 2014,FWC,18,Team Photo
-Argentina 2022,FWC,19,Team Photo
+Coca-Cola,CC,1,Lamine Yamal
+Coca-Cola,CC,2,Gabriel Magalhães
+Coca-Cola,CC,3,Joshua Kimmich
+Coca-Cola,CC,4,Harry Kane
+Coca-Cola,CC,5,Santiago Giménez
+Coca-Cola,CC,6,Joško Gvardiol
+Coca-Cola,CC,7,Federico Valverde
+Coca-Cola,CC,8,Jefferson Lerma
+Coca-Cola,CC,9,Enner Valencia
+Coca-Cola,CC,10,Emiliano Martínez
+Coca-Cola,CC,11,Virgil van Dijk
+Coca-Cola,CC,12,Alphonso Davies
+Coca-Cola,CC,13,Raúl Jiménez
+Coca-Cola,CC,14,Lautaro Martínez
