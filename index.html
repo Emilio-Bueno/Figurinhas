@@ -38,7 +38,6 @@
                     <span id="album-percent-text">0.0% Concluído</span>
                 </div>
             </div>
-            
         </div>
     </div>
 
@@ -48,18 +47,23 @@
         <button class="btn-modo btn-relatorio" onclick="gerarRelatorio()">Relatório</button>
     </div>
 
-    <div class="modo-selector" style="margin-top: 5px;">
-        <button class="btn-modo" style="background-color: #f57c00; color: white; border-color: #e65100;" onclick="exportarArquivoBackup()">Criar Backup</button>
-        <button class="btn-modo" style="background-color: #1976d2; color: white; border-color: #0d47a1;" onclick="document.getElementById('file-input').click()">Importar Backup</button>
-        <input type="file" id="file-input" style="display: none;" accept=".txt, .json, text/plain" onchange="importarArquivoBackup(event)">
+    <div class="modo-selector" style="margin-top: 5px; flex-wrap: wrap;">
+        <button class="btn-modo" style="background-color: #f57c00; color: white; border-color: #e65100;" onclick="exportarArquivoBackup()">Criar backup</button>
+        <button class="btn-modo" style="background-color: #1976d2; color: white; border-color: #0d47a1;" onclick="document.getElementById('file-input').click()">Importar backup</button>
+        <button class="btn-modo" style="background-color: #9c27b0; color: white; border-color: #7b1fa2;" onclick="document.getElementById('file-input-amigo').click()">Comparar com amigo</button>
+        
+        <input type="file" id="file-input" style="display: none;" accept="*/*" onchange="importarArquivoBackup(event)">
+        <input type="file" id="file-input-amigo" style="display: none;" accept="*/*" onchange="compararComAmigo(event)">
     </div>
 
     <div id="search-container">
-        <input type="text" id="search-input" placeholder="🔍 Buscar seleção (ex: Brasil)..." autocomplete="off">
+        <input type="text" id="search-input" placeholder="Buscar seleção (ex: Brasil)..." autocomplete="off">
         <div id="search-suggestions"></div>
     </div>
 
     <div id="groups-view"></div>
+
+    <div id="comparador-view"></div>
 
     <div id="sticker-view">
         <div class="view-header">

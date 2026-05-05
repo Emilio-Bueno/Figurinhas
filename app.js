@@ -70,6 +70,7 @@ const bodyEl = document.getElementById('app-body');
 const searchContainer = document.getElementById('search-container');
 const searchInput = document.getElementById('search-input');
 const searchSuggestions = document.getElementById('search-suggestions');
+const comparadorView = document.getElementById('comparador-view');
 
 function obterInfoSelecao(id) {
     if (id === 'FWC') return { inicio: 0, fim: 19, total: 20 };
@@ -85,22 +86,27 @@ async function carregarNomesCsv() {
         
         for (let i = 1; i < linhas.length; i++) {
             if (linhas[i].trim() === '') continue;
+            
             const dadosLinha = linhas[i].split(',');
             if (dadosLinha.length >= 4) {
                 const teamCode = dadosLinha[1].trim();
                 const number = parseInt(dadosLinha[2].trim());
-                const name = dadosLinha[3].trim();
+                const name = dadosLinha.slice(3).join(',').trim();
 
                 let normalizedCode = teamCode;
                 if (teamCode === 'SWI') normalizedCode = 'SUI';
                 else if (teamCode === 'JAP') normalizedCode = 'JPN';
                 else if (teamCode === 'KAS') normalizedCode = 'KSA';
 
-                if (!nomesFigurinhas[normalizedCode]) nomesFigurinhas[normalizedCode] = {};
+                if (!nomesFigurinhas[normalizedCode]) {
+                    nomesFigurinhas[normalizedCode] = {};
+                }
                 nomesFigurinhas[normalizedCode][number] = name;
             }
         }
-    } catch (error) { console.error('Erro ao ler CSV:', error); }
+    } catch (error) { 
+        console.error('Erro ao ler CSV:', error); 
+    }
 }
 
 function removerAcentos(str) { 
@@ -170,7 +176,6 @@ function renderizarResumo() {
     document.getElementById('stat-missing').textContent = totalPossivel - totalNoAlbum;
     document.getElementById('stat-repeated').textContent = repeatedTotal;
 
-    // Atualiza a barra de progresso total e centraliza a porcentagem
     const percentualGlobal = totalPossivel > 0 ? ((totalNoAlbum / totalPossivel) * 100) : 0;
     document.getElementById('album-progress-fill').style.width = `${percentualGlobal}%`;
     document.getElementById('album-percent-text').textContent = `${percentualGlobal.toFixed(1)}% Concluído`;
@@ -288,29 +293,24 @@ function renderizarGradeFigurinhas(country) {
                 return;
             }
             alternarStatus(country.id, i); 
-            // Só renderiza novamente se o status for alterado com sucesso (a validação no alternarStatus permite)
         };
         div.querySelector('.btn-diminuir').onclick = (e) => { e.stopPropagation(); modificarRepetida(country.id, i, -1); };
         grid.appendChild(div);
     }
 }
 
-// NOVA VALIDAÇÃO ADICIONADA AQUI
 function alternarStatus(id, n) {
     if (!progressoAlbum[id]) progressoAlbum[id] = {};
     if (!progressoAlbum[id][n]) progressoAlbum[id][n] = { owned: false, repeatedCount: 0 };
     
     if (modoRepetidasAtivo) {
-        // Trava de segurança: impede repetidas sem ter a figurinha
         if (!progressoAlbum[id][n].owned) {
-            alert("⚠️ Ops! Você não pode adicionar uma repetida se a figurinha ainda não está colada no seu álbum.");
-            return; // Sai da função sem salvar nada
+            alert("Atenção: Você não pode adicionar uma repetida se a figurinha ainda não está colada no seu álbum.");
+            return; 
         }
         progressoAlbum[id][n].repeatedCount++;
     } else {
         progressoAlbum[id][n].owned = !progressoAlbum[id][n].owned;
-        
-        // Limpeza inteligente: Se desmarcou do álbum, removemos as repetidas para não gerar fantasmas
         if (!progressoAlbum[id][n].owned) {
             progressoAlbum[id][n].repeatedCount = 0;
         }
@@ -335,6 +335,8 @@ function salvar() { localStorage.setItem('stickerCollectorMaxProgress', JSON.str
 function voltar() {
     selecaoAberta = null;
     stickerView.style.display = 'none';
+    comparadorView.style.display = 'none';
+    
     document.getElementById('dashboard-container').style.display = 'flex';
     document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'flex'); 
     document.getElementById('sticker-filters').style.display = 'none'; 
@@ -368,10 +370,84 @@ function importarArquivoBackup(event) {
             renderizarResumo();
             renderizarGrupos();
             alert("Sucesso!");
-        } catch (erro) { alert("Erro arquivo."); }
+        } catch (erro) {
+            alert("Erro ao ler o arquivo de backup.");
+        }
         event.target.value = '';
     };
     leitor.readAsText(arquivo);
+}
+
+function compararComAmigo(event) {
+    const arquivo = event.target.files[0];
+    if (!arquivo) return;
+    const leitor = new FileReader();
+    leitor.onload = (e) => {
+        try {
+            const amigoProgress = JSON.parse(e.target.result);
+            gerarRelatorioComparacao(amigoProgress);
+        } catch (erro) {
+            alert("Erro ao ler o arquivo do amigo.");
+        }
+        event.target.value = ''; 
+    };
+    leitor.readAsText(arquivo);
+}
+
+function gerarRelatorioComparacao(amigoProgress) {
+    let euDou = [];
+    let euRecebo = [];
+
+    listaTodasSelecoes.forEach(c => {
+        const info = obterInfoSelecao(c.id);
+        for (let i = info.inicio; i <= info.fim; i++) {
+            const meuS = progressoAlbum[c.id] ? progressoAlbum[c.id][i] : null;
+            const amigoS = amigoProgress[c.id] ? amigoProgress[c.id][i] : null;
+
+            const euTenhoRepetida = meuS && meuS.repeatedCount > 0;
+            const amigoNaoTem = !amigoS || !amigoS.owned;
+
+            const amigoTemRepetida = amigoS && amigoS.repeatedCount > 0;
+            const euNaoTenho = !meuS || !meuS.owned;
+
+            const displayNum = i === 0 ? '00' : i;
+            const nomeFigurinha = `${c.id} ${displayNum}`;
+
+            if (euTenhoRepetida && amigoNaoTem) euDou.push(nomeFigurinha);
+            if (amigoTemRepetida && euNaoTenho) euRecebo.push(nomeFigurinha);
+        }
+    });
+
+    exibirTelaComparacao(euDou, euRecebo);
+}
+
+function exibirTelaComparacao(euDou, euRecebo) {
+    groupsView.style.display = 'none';
+    stickerView.style.display = 'none';
+    document.getElementById('dashboard-container').style.display = 'none';
+    document.querySelectorAll('.modo-selector').forEach(el => el.style.display = 'none');
+    document.getElementById('search-container').style.display = 'none';
+
+    let htmlEuDou = euDou.length > 0 ? euDou.join(', ') : 'Nenhuma figurinha';
+    let htmlEuRecebo = euRecebo.length > 0 ? euRecebo.join(', ') : 'Nenhuma figurinha';
+
+    comparadorView.innerHTML = `
+        <div class="view-header">
+            <div class="back-button" onclick="voltar()">←</div>
+            <span class="view-title">Resultado da Troca</span>
+            <div style="width: 40px;"></div>
+        </div>
+        <div class="comparador-card" style="border-color: #4caf50;">
+            <h3 style="color: #4caf50;">Eu passo para o amigo (${euDou.length}):</h3>
+            <p>${htmlEuDou}</p>
+        </div>
+        <div class="comparador-card" style="margin-top: 15px; border-color: #2196f3;">
+            <h3 style="color: #2196f3;">Ele passa para mim (${euRecebo.length}):</h3>
+            <p>${htmlEuRecebo}</p>
+        </div>
+    `;
+    comparadorView.style.display = 'flex';
+    window.scrollTo(0, 0);
 }
 
 function gerarRelatorio() {
@@ -379,7 +455,6 @@ function gerarRelatorio() {
     Object.keys(dadosAlbumEstadicos).forEach(g => dadosAlbumEstadicos[g].forEach(c => {
         let fP = [], rP = [];
         const info = obterInfoSelecao(c.id);
-        
         for (let i = info.inicio; i <= info.fim; i++) {
             let s = progressoAlbum[c.id] ? progressoAlbum[c.id][i] : null;
             if (!s || !s.owned) fP.push(i === 0 ? '00' : i);
