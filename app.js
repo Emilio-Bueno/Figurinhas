@@ -63,6 +63,7 @@ let modoRepetidasAtivo = false;
 let selecaoAberta = null;
 let nomesFigurinhas = {};
 let filtroAtual = 'todas';
+let posicaoScrollAnterior = 0; // NOVA MEMÓRIA DE ROLAGEM DA TELA
 
 const stickerView = document.getElementById('sticker-view');
 const groupsView = document.getElementById('groups-view');
@@ -219,6 +220,9 @@ function renderizarGrupos() {
 }
 
 function abrirGradeSelecao(country) {
+    // SALVA A POSIÇÃO ATUAL DA TELA ANTES DE ABRIR A SELEÇÃO
+    posicaoScrollAnterior = window.scrollY || document.documentElement.scrollTop;
+
     selecaoAberta = country;
     groupsView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'none';
@@ -343,6 +347,11 @@ function voltar() {
     searchContainer.style.display = 'flex';
     searchInput.value = '';
     renderizarGrupos();
+
+    // DEVOLVE A TELA PARA A POSIÇÃO ANTERIOR (Com um micro-delay pro navegador não se perder)
+    setTimeout(() => {
+        window.scrollTo(0, posicaoScrollAnterior);
+    }, 10);
 }
 
 function exportarArquivoBackup() {
@@ -422,6 +431,9 @@ function gerarRelatorioComparacao(amigoProgress) {
 }
 
 function exibirTelaComparacao(euDou, euRecebo) {
+    // TAMBÉM SALVA A POSIÇÃO AO ABRIR O COMPARADOR
+    posicaoScrollAnterior = window.scrollY || document.documentElement.scrollTop;
+
     groupsView.style.display = 'none';
     stickerView.style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'none';
