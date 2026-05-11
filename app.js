@@ -63,7 +63,7 @@ let modoRepetidasAtivo = false;
 let selecaoAberta = null;
 let nomesFigurinhas = {};
 let filtroAtual = 'todas';
-let posicaoScrollAnterior = 0; // NOVA MEMÓRIA DE ROLAGEM DA TELA
+let posicaoScrollAnterior = 0; 
 
 const stickerView = document.getElementById('sticker-view');
 const groupsView = document.getElementById('groups-view');
@@ -220,7 +220,6 @@ function renderizarGrupos() {
 }
 
 function abrirGradeSelecao(country) {
-    // SALVA A POSIÇÃO ATUAL DA TELA ANTES DE ABRIR A SELEÇÃO
     posicaoScrollAnterior = window.scrollY || document.documentElement.scrollTop;
 
     selecaoAberta = country;
@@ -348,7 +347,6 @@ function voltar() {
     searchInput.value = '';
     renderizarGrupos();
 
-    // DEVOLVE A TELA PARA A POSIÇÃO ANTERIOR (Com um micro-delay pro navegador não se perder)
     setTimeout(() => {
         window.scrollTo(0, posicaoScrollAnterior);
     }, 10);
@@ -420,7 +418,7 @@ function gerarRelatorioComparacao(amigoProgress) {
             const euNaoTenho = !meuS || !meuS.owned;
 
             const displayNum = i === 0 ? '00' : i;
-            const nomeFigurinha = `${c.id} ${displayNum}`;
+            const nomeFigurinha = `${c.id}${displayNum}`;
 
             if (euTenhoRepetida && amigoNaoTem) euDou.push(nomeFigurinha);
             if (amigoTemRepetida && euNaoTenho) euRecebo.push(nomeFigurinha);
@@ -431,7 +429,6 @@ function gerarRelatorioComparacao(amigoProgress) {
 }
 
 function exibirTelaComparacao(euDou, euRecebo) {
-    // TAMBÉM SALVA A POSIÇÃO AO ABRIR O COMPARADOR
     posicaoScrollAnterior = window.scrollY || document.documentElement.scrollTop;
 
     groupsView.style.display = 'none';
@@ -462,21 +459,87 @@ function exibirTelaComparacao(euDou, euRecebo) {
     window.scrollTo(0, 0);
 }
 
+// NOVA FUNÇÃO DO RELATÓRIO DO WHATSAPP
 function gerarRelatorio() {
-    let rel = "*📋 RELATÓRIO 2026*\n\n", faltam = "", reps = "";
-    Object.keys(dadosAlbumEstadicos).forEach(g => dadosAlbumEstadicos[g].forEach(c => {
-        let fP = [], rP = [];
+    // Dicionário de Bandeiras (Emojis)
+    const emojis = {
+        "FWC": "🏆", "MEX": "🇲🇽", "RSA": "🇿🇦", "KOR": "🇰🇷", "CZE": "🇨🇿",
+        "CAN": "🇨🇦", "BIH": "🇧🇦", "QAT": "🇶🇦", "SUI": "🇨🇭", "BRA": "🇧🇷",
+        "MAR": "🇲🇦", "HAI": "🇭🇹", "SCO": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "USA": "🇺🇸", "PAR": "🇵🇾",
+        "AUS": "🇦🇺", "TUR": "🇹🇷", "GER": "🇩🇪", "CUW": "🇨🇼", "CIV": "🇨🇮",
+        "ECU": "🇪🇨", "NED": "🇳🇱", "JPN": "🇯🇵", "SWE": "🇸🇪", "TUN": "🇹🇳",
+        "BEL": "🇧🇪", "EGY": "🇪🇬", "IRN": "🇮🇷", "NZL": "🇳🇿", "ESP": "🇪🇸",
+        "CPV": "🇨🇻", "KSA": "🇸🇦", "URU": "🇺🇾", "FRA": "🇫🇷", "SEN": "🇸🇳",
+        "IRQ": "🇮🇶", "NOR": "🇳🇴", "ARG": "🇦🇷", "ALG": "🇩🇿", "AUT": "🇦🇹",
+        "JOR": "🇯🇴", "POR": "🇵🇹", "COD": "🇨🇩", "UZB": "🇺🇿", "COL": "🇨🇴",
+        "ENG": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "CRO": "🇭🇷", "GHA": "🇬🇭", "PAN": "🇵🇦", "CC": ""
+    };
+
+    let totalNoAlbum = 0;
+    let totalPossivel = 0;
+    let totalRepetidas = 0;
+    let faltam = "";
+    let reps = "";
+
+    // Helper para quebrar a lista de 5 em 5 figurinhas
+    const agruparDeCinco = (arr) => {
+        let result = [];
+        for (let i = 0; i < arr.length; i += 5) {
+            result.push(arr.slice(i, i + 5).join(', '));
+        }
+        return result.join('\n');
+    };
+
+    listaTodasSelecoes.forEach(c => {
         const info = obterInfoSelecao(c.id);
+        totalPossivel += info.total;
+        
+        let fP = [];
+        let rP = [];
+        
         for (let i = info.inicio; i <= info.fim; i++) {
             let s = progressoAlbum[c.id] ? progressoAlbum[c.id][i] : null;
-            if (!s || !s.owned) fP.push(i === 0 ? '00' : i);
-            if (s && s.repeatedCount > 0) rP.push(`${i === 0 ? '00' : i}(+${s.repeatedCount})`);
+            
+            // Regra especial pro FWC 00, e para as normais fica (Ex: BRA10, MEX1)
+            let stickerText = (c.id === 'FWC' && i === 0) ? '00' : `${c.id}${i}`;
+
+            if (!s || !s.owned) {
+                fP.push(stickerText);
+            } else {
+                totalNoAlbum++;
+                if (s.repeatedCount > 0) {
+                    totalRepetidas += s.repeatedCount;
+                    // Se tiver mais de uma cópia da MESMA repetida, coloca (×2), etc.
+                    if (s.repeatedCount > 1) {
+                        rP.push(`${stickerText} (×${s.repeatedCount})`);
+                    } else {
+                        rP.push(stickerText);
+                    }
+                }
+            }
         }
-        if (fP.length > 0) faltam += `*${c.id}:* ${fP.join(', ')}\n`;
-        if (rP.length > 0) reps += `*${c.id}:* ${rP.join(', ')}\n`;
-    }));
-    rel += "*🔴 FALTAM:*\n" + (faltam || "Nenhuma!\n") + "\n*🔵 REPETIDAS:*\n" + (reps || "Nenhuma!\n");
-    navigator.clipboard.writeText(rel).then(() => alert("Copiado!"));
+
+        const emoji = emojis[c.id] ? `${emojis[c.id]} ` : "";
+
+        if (fP.length > 0) {
+            faltam += `\n${emoji}${c.id}\n${agruparDeCinco(fP)}\n`;
+        }
+        if (rP.length > 0) {
+            reps += `\n${emoji}${c.id}\n${agruparDeCinco(rP)}\n`;
+        }
+    });
+
+    const percentual = Math.round((totalNoAlbum / totalPossivel) * 100);
+    const totalFaltando = totalPossivel - totalNoAlbum;
+
+    // Montagem final do texto para a Área de Transferência
+    let rel = `🏆 Copa 2026\n📋 ${totalNoAlbum}/${totalPossivel} (${percentual}%)\n\n`;
+    rel += `❌ FIGURINHAS FALTANDO: ${totalFaltando}\n─────────────\n`;
+    rel += faltam ? faltam : "\nNenhuma!\n";
+    rel += `\n─────────────\n\n🔁 FIGURINHAS REPETIDAS: ${totalRepetidas}\n─────────────\n`;
+    rel += reps ? reps : "\nNenhuma!\n";
+
+    navigator.clipboard.writeText(rel).then(() => alert("Relatório formatado copiado! Só colar no WhatsApp."));
 }
 
 async function inicializarApp() {
